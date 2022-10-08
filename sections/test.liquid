@@ -5,47 +5,56 @@
 <div id="productContainer">
 
         <img src="{{ 'product.webp' | asset_url }}" alt="" id="productImage">
-        <div id="productInfo"><h1>500ml Insulated Bottle</h1>
-            <div id="price"><span>£25.00</span></div>
-    
-        <form action="" method="post">
-            <div id="swatch">Color
-                <input type="radio" name="color" id="color-1" value="color-1" checked> Color 1
-                <input type="radio" name="color" id="color-2" value="color-2"> Color 2
-                <input type="radio" name="color" id="color-3" value="color-3"> Color 3
+        <div class="product" id="productInfo">
+            <h1 id="productTitle">500ml Insulated Bottle</h1>
+            <h2 id="price">£25.00</h2>
+        
+            <form class="product" id="productOptions" action="" method="post">
+                <h3>Color</h3>
+                <div id="swatch">
+                    <input type="radio" name="color" id="color-1" value="color-1" checked> Color 1
+                    <input type="radio" name="color" id="color-2" value="color-2"> Color 2
+                    <input type="radio" name="color" id="color-3" value="color-3"> Color 3
+                </div>
+                <h3 id="titleQty">Quantity</h3>
+                <div id="grid-qty-atc">
+                <div id="quantity">
+                    <span class="qty-adjust" id="minus">-</span>
+                    <input type="number" name="qty" id="qty" min="1" value="1">
+                    <span class="qty-adjust" id="plus">+</span>
+                </div>
+                <input id="atc" type="submit" value="Add to Cart">
+                </div>
+            </form>
+
+            <div class="product" id="specs">
+                <ul id="tabs">
+                    <li><a href="description">Description</a></li>
+                    <li><a href="details">Details</a></li>
+                </ul>
+                <ul id="tabsContent">
+                    <li id="description">
+                        <p>
+
+                            Designed so that you can enjoy your drinks the way you want all throughout the day, because our bottles keep liquids cold for 24 hours and hot for 12 hours. Made from double-layered medical-grade stainless steel, this helps you eliminate your dependency on plastic without having to use another plastic reusable container. Perfect for taking on-the-go.
+
+                            No more fiddling. No more faff. Just water with you, wherever.
+
+                            You also get free water refills from over 800 locations with The Water Network.
+
+                            What’s more, every GiveMeTap bottle sold provides someone living in Africa with 10 years of clean water. Now that’s what we call win-win-win.
+                        </p>
+                    </li>
+                    <li id="details">
+                        <ul>
+                            <li>Keeps liquids cold for up to 24 hours or hot for up to 12 hours.</li>
+                            <li>BPA free, 100% free of toxins and no phthalates or PVC.</li>
+                            <li>316 medical grade stainless steel which won’t transfer flavour. Silicone ring. Silicone bottom grip.</li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <div id="quantity">Qty<input type="number" name="qty" id="qty"></div>
-            <div id="atc"><input type="submit" value="Submit"></div>
-        </form>
-    
-        <div id="info">
-            <ul id="tabs">
-                <li><a href="description">Description</a></li>
-                <li><a href="details">Details</a></li>
-            </ul>
-            <ul id="tabsContent">
-                <li id="description">
-                    <p>
-    
-                        Designed so that you can enjoy your drinks the way you want all throughout the day, because our bottles keep liquids cold for 24 hours and hot for 12 hours. Made from double-layered medical-grade stainless steel, this helps you eliminate your dependency on plastic without having to use another plastic reusable container. Perfect for taking on-the-go.
-                        
-                        No more fiddling. No more faff. Just water with you, wherever.
-                        
-                        You also get free water refills from over 800 locations with The Water Network.
-                        
-                        What’s more, every GiveMeTap bottle sold provides someone living in Africa with 10 years of clean water. Now that’s what we call win-win-win.
-                    </p>
-                </li>
-                <li id="details">
-                    <ul>
-                        <li>Keeps liquids cold for up to 24 hours or hot for up to 12 hours.</li>
-                        <li>BPA free, 100% free of toxins and no phthalates or PVC.</li>
-                        <li>316 medical grade stainless steel which won’t transfer flavour. Silicone ring. Silicone bottom grip.</li>
-                    </ul>
-                </li>
-            </ul>
         </div>
-    </div>
 
 </div>
 
