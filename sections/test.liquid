@@ -12,9 +12,12 @@
             <form class="product" id="productOptions" action="" method="post">
                 <h3>Color</h3>
                 <div id="swatch">
-                    <input type="radio" name="color" id="color-1" value="color-1" checked> Color 1
-                    <input type="radio" name="color" id="color-2" value="color-2"> Color 2
-                    <input type="radio" name="color" id="color-3" value="color-3"> Color 3
+                    <input class="single-option-selector" id="color-1" type="radio" name="color" checked> 
+                    <label class="button-color" for="color-1"><span class="tooltip">White</span></label>
+                    <input class="single-option-selector" id="color-2" type="radio" name="color">
+                    <label class="button-color" for="color-2"><span class="tooltip">Black</span></label>
+                    <input class="single-option-selector" id="color-3" type="radio" name="color">
+                    <label class="button-color" for="color-3"><span class="tooltip">Red</span></label>
                 </div>
                 <h3 id="titleQty">Quantity</h3>
                 <div id="grid-qty-atc">
@@ -23,7 +26,7 @@
                     <input type="number" name="qty" id="qty" min="1" value="1">
                     <span class="qty-adjust" id="plus">+</span>
                 </div>
-                <input id="atc" type="submit" value="Add to Cart">
+                <button id="atc" type="submit"> Add to Cart </button>
                 </div>
             </form>
 
