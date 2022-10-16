@@ -1,44 +1,52 @@
 {{ 'test.css' | asset_url | stylesheet_tag }}
 
-<script async type="module">
+<script src="{{ 'product-page.js' | asset_url }}" type="module"></script>
 
-
-
-</script>
-
-<main id="productContainer">
+<main id="product-container">
     
-    <div id="imageGallery">
-        <img src="{{ 'bottle-white.webp' | asset_url }}" alt="" class="productImage" id="bottle-1" loading="lazy" width="299" height="650">
-        <img src="{{ 'bottle-black.webp' | asset_url }}" alt="" class="productImage" id="bottle-2" loading="lazy" width="299" height="650">
-        <img src="{{ 'bottle-red.webp' | asset_url }}" alt="" class="productImage" id="bottle-3" loading="lazy" width="299" height="650">
-    </div>
+    <section id="img-container">
     
-    <div class="product" id="productInfo">
+        <div id="img-main">
+            <img src="{{ 'bottle-white.webp' | asset_url }}" alt="500ml Insulated Bottle in White" class="product-image" id="main-image" loading="lazy" width="299" height="650">
+        </div>
 
-        <div id="productHeaders">
-            <h1 id="productTitle">500ml Insulated Bottle</h1>
+        <div id="img-horizontal-carousel">
+            <button class="carousel-btn"><img src="{{ 'bottle-white.webp' | asset_url }}" alt="500ml Insulated Bottle in White" class="carousel-image" id="bottle-1" loading="lazy" width="299" height="650"></button>
+            <button class="carousel-btn"><img src="{{ 'bottle-black.webp' | asset_url }}" alt="500ml Insulated Bottle in Black" class="carousel-image" id="bottle-2" loading="lazy" width="299" height="650"></button>
+            <button class="carousel-btn"><img src="{{ 'bottle-red.webp' | asset_url }}" alt="500ml Insulated Bottle in Red" class="carousel-image" id="bottle-3" loading="lazy" width="299" height="650"></button>
+        </div>
+
+    </section>
+    
+    <section class="product" id="product-info">
+
+        <div id="product-headers">
+            <h1 id="product-name">500ml Insulated Bottle</h1>
             <h2 id="price">£25.00</h2>
         </div>
     
-        <form class="product" id="productOptions" action="" method="post">
-            <h3>Color</h3>
+        <form class="product" id="product-options" action="" method="post">
+
+            <legend>
+                <h3 class="product-title" id="product-title-color">Color: <span id="product-title-color-choice">White</span> </h3>
+            </legend>
+
             <div id="swatch">
-                <input class="single-option-selector" id="color-1" type="radio" name="color" checked> 
-                <label class="button-color" for="color-1"><span class="tooltip">White</span></label>
-                <input class="single-option-selector" id="color-2" type="radio" name="color">
-                <label class="button-color" for="color-2"><span class="tooltip">Black</span></label>
-                <input class="single-option-selector" id="color-3" type="radio" name="color">
-                <label class="button-color" for="color-3"><span class="tooltip">Red</span></label>
+                <input class="single-option-selector" id="color-1" data-color="white" type="radio" name="color" checked> 
+                <label class="button-color" for="color-1"><span class="color-name">White</span></label>
+                <input class="single-option-selector" id="color-2" data-color="black" type="radio" name="color">
+                <label class="button-color" for="color-2"><span class="color-name">Black</span></label>
+                <input class="single-option-selector" id="color-3" data-color="red" type="radio" name="color">
+                <label class="button-color" for="color-3"><span class="color-name">Red</span></label>
             </div>
-            <h3 id="titleQty">Quantity</h3>
+            <h3 class="product-title" id="product-title-qty">Quantity</h3>
             <div id="grid-qty-atc">
-            <div id="quantity">
-                <span class="qty-adjust" id="minus">-</span>
-                <input type="number" name="qty" id="qty" min="1" value="1">
-                <span class="qty-adjust" id="plus">+</span>
-            </div>
-            <button id="atc" type="submit"> Add to Cart </button>
+                <div id="qty-wrapper">
+                    <span class="qty-adjust" id="minus">-</span>
+                    <input type="number" name="qty" id="qty" min="1" value="1">
+                    <span class="qty-adjust" id="plus">+</span>
+                </div>
+                <button id="atc" type="submit"> Add to Cart </button>
             </div>
         </form>
 
@@ -69,6 +77,6 @@
                 </li>
             </ul>
         </div>
-    </div>
+    </section>
 
 </main>
