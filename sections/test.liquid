@@ -25,32 +25,40 @@
             <h2 id="price">£25.00</h2>
         </div>
     
-        <form class="product" id="product-options" action="" method="post">
+        <form id="product-options" action="" method="post">
 
             <legend>
                 <h3 class="product-title" id="product-title-color">Color: <span id="product-title-color-choice">White</span> </h3>
             </legend>
 
             <div id="swatch">
-                <input class="single-option-selector" id="color-1" data-color="white" type="radio" name="color" checked> 
-                <label class="button-color" for="color-1"><span class="color-name">White</span></label>
-                <input class="single-option-selector" id="color-2" data-color="black" type="radio" name="color">
-                <label class="button-color" for="color-2"><span class="color-name">Black</span></label>
-                <input class="single-option-selector" id="color-3" data-color="red" type="radio" name="color">
-                <label class="button-color" for="color-3"><span class="color-name">Red</span></label>
+                <div>
+                    <input class="color-btn color-btn--selected" id="color-1" value="color-1" type="radio" name="color" data-color="White" checked> 
+                    <label class="color-btn-label" for="color-1"><span>White</span></label>
+                </div>
+                <div>
+                    <input class="color-btn" id="color-2" value="color-2" type="radio" name="color" data-color="Black">
+                    <label class="color-btn-label" for="color-2"><span>Black</span></label>
+                </div>
+                <div>
+                    <input class="color-btn" id="color-3" value="color-3" type="radio" name="color" data-color="Red">
+                    <label class="color-btn-label" for="color-3"><span>Red</span></label>
+                </div>
             </div>
             <h3 class="product-title" id="product-title-qty">Quantity</h3>
             <div id="grid-qty-atc">
                 <div id="qty-wrapper">
+                    {% comment %} These spans should be buttons for better semantics {% endcomment %}
                     <span class="qty-adjust" id="minus">-</span>
-                    <input type="number" name="qty" id="qty" min="1" value="1">
+                    <input type="number" name="qty" id="qty-box" min="1" value="1" inputmode="numeric">
                     <span class="qty-adjust" id="plus">+</span>
                 </div>
                 <button id="atc" type="submit"> Add to Cart </button>
             </div>
+            
         </form>
 
-        <div class="product" id="specs">
+        <div id="specs">
             <ul id="tabs">
                 <li><a href="description">Description</a></li>
                 <li><a href="details">Details</a></li>

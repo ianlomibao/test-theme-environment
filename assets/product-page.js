@@ -1,30 +1,61 @@
 window.addEventListener('DOMContentLoaded', function() {
     console.log('product-page.js loaded in')
 
-    // changes the text and image on product page to match the color selection
-    let titleColor = document.getElementById('product-title-color-choice');
-    let colorSelectors = document.getElementsByClassName('single-option-selector');
-    let colorNames = document.getElementsByClassName('color-name');
-    let carouselButtons = document.getElementsByClassName('carousel-btn');
-    let mainImage = document.getElementById('img-main').firstElementChild;
+    // changes the chosen and main image on product page to match the color selection
+    const titleColor = document.getElementById('product-title-color-choice'),
+          colorSelectors = document.getElementsByClassName('color-btn'),
+          carouselButtons = document.getElementsByClassName('carousel-btn'),
+          mainImage = document.getElementById('img-main').firstElementChild;
 
     for (let i = 0; i < colorSelectors.length; i++) {
-        let colorInput = colorSelectors[i];
-        let colorName = colorNames[i].innerHTML;
-        let carouselButton = carouselButtons[i];
-        let carouselImage = carouselButton.firstElementChild;
-        let carouselImageSrc = carouselImage.getAttribute('src');
-        let carouselImageAlt = carouselImage.getAttribute('alt');
+        const colorInput = colorSelectors[i],
+              colorName = colorInput.getAttribute('data-color'),
+              carouselButton = carouselButtons[i],
+              carouselImage = carouselButton.firstElementChild,
+              carouselImageSrc = carouselImage.src,
+              carouselImageAlt = carouselImage.alt;
     
-        function update_title_and_img() {
-            titleColor.innerText = colorName;
-            mainImage.setAttribute('src', carouselImageSrc);
-            mainImage.setAttribute('alt', carouselImageAlt);
+        function update_product_choice() {
+            if(colorName != titleColor.innerText) {
+                titleColor.innerText = colorName;
+                mainImage.src = carouselImageSrc;
+                mainImage.alt = carouselImageAlt;
+
+                const inputColorSelected = document.querySelector('.color-btn--selected');
+                inputColorSelected.classList.remove("color-btn--selected")
+                colorInput.classList.add("color-btn--selected")
+            }
         }
 
-        colorInput.addEventListener('click', update_title_and_img);
-        carouselButton.addEventListener('click', update_title_and_img);
+        colorInput.addEventListener('click', update_product_choice);
+        carouselButton.addEventListener('click', update_product_choice);
     }
 
+    // interactive quantity box
+    const qtyValue = document.getElementById('qty-box'),
+          qtyMinus = document.getElementById('minus'),
+          qtyPlus  = document.getElementById('plus');
+    
+    qtyMinus.addEventListener('click', () => {
+        // check if the current value is invalid
+        if(!qtyValue.checkValidity()) {
+            qtyValue.value = 1;
+        }
+        else {
+            if(qtyValue.value > 1) {
+                qtyValue.value -= 1;
+            }
+        }
+    });
+    
+    qtyPlus.addEventListener('click', () => {
+        // check if the current value is invalid
+        if(!qtyValue.checkValidity()) {
+            qtyValue.value = 1;
+        }
+        else {
+            qtyValue.value = Number(qtyValue.value) + 1;
+        }
+    });
 
 });
