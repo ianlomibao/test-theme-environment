@@ -1,6 +1,22 @@
 {{ 'test.css' | asset_url | stylesheet_tag }}
-
 <script src="{{ 'product-page.js' | asset_url }}" type="module"></script>
+
+<nav>
+    <div class="nav-section" id="nav-logo">
+        <a href="#">
+        
+        </a>
+    </div>
+
+    <div class="nav-section" id="nav-categories">
+        <a href="#">Our Bottles</a>
+        <a href="#">Our Impacts</a>
+        <a href="#">Our Story</a>
+    </div>
+
+    <div class="nav-section" id="nav-cart">
+    </div>
+</nav>
 
 <main id="product-container">
     
@@ -18,7 +34,7 @@
 
     </section>
     
-    <section class="product" id="product-info">
+    <section id="product-info">
 
         <div id="product-headers">
             <h1 id="product-name">500ml Insulated Bottle</h1>
@@ -53,8 +69,8 @@
                     <input type="number" name="qty" id="qty-box" min="1" value="1" inputmode="numeric">
                     <span class="qty-adjust" id="plus">+</span>
                 </div>
-                <button id="atc" type="submit"> Add to Cart </button>
             </div>
+            <button id="atc" type="submit"> Add to Cart </button>
             
         </form>
 
