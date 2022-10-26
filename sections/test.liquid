@@ -23,14 +23,29 @@
     
     <section id="img-container">
         {% comment %} TODO: Pull product variant images and make a button/img tag for each of them {% endcomment %}    
-        <div id="img-main">
+        {% comment %} <div id="img-main">
             <img src="{{ 'bottle-white.webp' | asset_url }}" alt="500ml Insulated Bottle in White" class="product-image" id="main-image" loading="lazy" width="299" height="650">
         </div>
 
         <div id="img-horizontal-carousel">
-            <button class="carousel-btn"><img src="{{ 'bottle-white.webp' | asset_url }}" alt="500ml Insulated Bottle in White" class="carousel-image" id="bottle-1" loading="lazy" width="299" height="650"></button>
-            <button class="carousel-btn"><img src="{{ 'bottle-black.webp' | asset_url }}" alt="500ml Insulated Bottle in Black" class="carousel-image" id="bottle-2" loading="lazy" width="299" height="650"></button>
-            <button class="carousel-btn"><img src="{{ 'bottle-red.webp' | asset_url }}" alt="500ml Insulated Bottle in Red" class="carousel-image" id="bottle-3" loading="lazy" width="299" height="650"></button>
+            <button class="carousel-btn"><img src="{{ 'bottle-white.webp' | asset_url }}" alt="500ml Insulated Bottle in White" class="carousel-image" loading="lazy" width="299" height="650"></button>
+            <button class="carousel-btn"><img src="{{ 'bottle-black.webp' | asset_url }}" alt="500ml Insulated Bottle in Black" class="carousel-image" loading="lazy" width="299" height="650"></button>
+            <button class="carousel-btn"><img src="{{ 'bottle-red.webp' | asset_url }}" alt="500ml Insulated Bottle in Red" class="carousel-image" loading="lazy" width="299" height="650"></button>
+        </div> {% endcomment %}
+
+        {% comment %} {% liquid
+        assign options = product.options_with_values 
+        assign current_option = options.selected_value
+        %} {% endcomment %}
+
+        <div id="img-main">
+            {{ product.featured_image | image_tage: class: 'product-image', loading: 'lazy' }}
+        </div>
+
+        <div id="img-horizontal-carousel">
+        {% for image in product.images %}                
+            <button class="carousel-btn">{{ image | image_tag: class: 'carousel-image', loading: 'lazy' }}</button>
+        {% endfor %}
         </div>
 
     </section>
