@@ -22,7 +22,7 @@
 <main id="product-container">
     
     <section id="img-container">
-    
+        {% comment %} TODO: Pull product variant images and make a button/img tag for each of them {% endcomment %}    
         <div id="img-main">
             <img src="{{ 'bottle-white.webp' | asset_url }}" alt="500ml Insulated Bottle in White" class="product-image" id="main-image" loading="lazy" width="299" height="650">
         </div>
@@ -37,19 +37,20 @@
     
     <section id="product-info">
 
+        {% comment %} TODO: Pull product name/price {% endcomment %}
         <div id="product-headers">
             <h1 id="product-name">500ml Insulated Bottle</h1>
             <h2 id="price">£25.00</h2>
         </div>
     
-        <form id="product-options" action="" method="post">
+        <form id="product-options" action="/cart/add" method="post">
 
             <legend>
                 <h3 class="product-title" id="product-title-color">Color: <span id="product-title-color-choice">White</span> </h3>
             </legend>
 
-            <div id="swatch">
-                <div>
+            {% comment %} TODO: Pull product variant options and create input/label tags for them {% endcomment %}
+                {% comment %} <div>
                     <input class="color-btn color-btn--selected" id="color-1" value="color-1" type="radio" name="color" data-color="White" checked> 
                     <label class="color-btn-label" for="color-1"><span>White</span></label>
                 </div>
@@ -60,8 +61,26 @@
                 <div>
                     <input class="color-btn" id="color-3" value="color-3" type="radio" name="color" data-color="Red">
                     <label class="color-btn-label" for="color-3"><span>Red</span></label>
-                </div>
-            </div>
+                </div> {% endcomment %}
+            {% unless product.has_only_default_variant %}
+                {% for option in product.options_with_values %}
+                    <div id="swatch">
+                        {% if option.name == "Color" %}
+                        {% assign index = forloop.index %}
+                        {% for value in option.values %}
+                        <div>
+                        {% if option.selected_value == value %}
+                            <input type="radio" class="color-btn color-btn--selected" id="color-{{forloop.index}}" name="color" value="{{ value | escape }}" data-color="{{ value | escape }}" checked>
+                        {% else %}
+                            <input type="radio" class="color-btn" id="color-{{forloop.index}}" name="color" value="{{ value | escape }}" data-color="{{ value | escape }}">
+                        {% endif %}
+                            <label for="color-{{forloop.index}}" class="color-btn-label"><span>{{ value | escape }}</span></label>
+                        </div>    
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endunless %}
             <h3 class="product-title" id="product-title-qty">Quantity</h3>
             <div id="grid-qty-atc">
                 <div id="qty-wrapper">

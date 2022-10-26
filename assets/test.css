@@ -95,7 +95,7 @@ body {
 #swatch {
     display: grid;
     justify-items: left;
-    
+    position: relative;
     grid-template-columns: repeat(3, 55px);
 }
 
@@ -124,14 +124,12 @@ body {
 
 }
 
-/* .color-btn-label:hover .color-name {
-    visibility: visible;
-} */
-
 .color-btn--selected ~ label {
     border-width: 3px;
     border-color: rgb(var(--dark-accent));
 }
+
+/* Can replace background-color's with variables set through Shopify theme editor */
 
 .color-btn-label[for="color-1"] {
     background-color: white;
