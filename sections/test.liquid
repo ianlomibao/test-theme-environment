@@ -5,9 +5,10 @@ Bugs/Limitations:
         - FIX: Add function to update main image when a carousel thumbnail is clicked
     - Product images, color variants, and color metadata must all be sorted in the same order
     - Only 1 image per color variant
-        - FIX: Add data-color attribute for each color variation, refactor JS so that the thumbnail buttons aren't connected to swatch buttons according to array order
+        - FIX: Add data-color attribute for each color variation, refactor JS so that the 
+            thumbnail buttons aren't connected to swatch buttons according to array order
     - Image carousel does not highlight which image is being displayed
-    - Image carousel does not automatically scroll to the image that is being displayed when a color is selected
+    - Image carousel and color swatch don't automatically scroll to the image that is being displayed when a color is selected
 {% endcomment %}
 
 {{ 'test.css' | asset_url | stylesheet_tag }}
