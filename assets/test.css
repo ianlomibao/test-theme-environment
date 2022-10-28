@@ -48,7 +48,10 @@ body {
     gap: 3px;
 }
 
-.carousel-btn {}
+.carousel-btn {
+    background-color: rgb(var(--color-bg));
+    border: 1px solid #d8d8d8;
+}
 
 .carousel-image {
     height: 60px;
@@ -91,7 +94,6 @@ form {
     display: flex;
     justify-items: left;
     position: relative;
-    /* grid-template-columns: repeat(3, 55px); */
     gap: clamp(0.5rem, 1vw, 1rem);
 }
 
@@ -220,5 +222,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
     .product {
         width: auto;
+    }
+
+    #product-info {
+        max-width: 90vw;
+    }
+    
+    #swatch {
+        overflow-x: scroll;
     }
 }

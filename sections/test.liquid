@@ -1,3 +1,15 @@
+{% comment %} 
+Bugs/Limitations:
+    - Can only have product images that correspond to color variants
+        - Images not assigned to a color aren't shown when clicked
+        - FIX: Add function to update main image when a carousel thumbnail is clicked
+    - Product images, color variants, and color metadata must all be sorted in the same order
+    - Only 1 image per color variant
+        - FIX: Add data-color attribute for each color variation, refactor JS so that the thumbnail buttons aren't connected to swatch buttons according to array order
+    - Image carousel does not highlight which image is being displayed
+    - Image carousel does not automatically scroll to the image that is being displayed when a color is selected
+{% endcomment %}
+
 {{ 'test.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'product-page-jquery.js' | asset_url }}" type="module" defer="defer"></script>
 {% style %}
@@ -61,9 +73,7 @@
     
         {% form 'product', product %}
         <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-            <legend>
-                <h3 class="product-title" id="product-title-color">Color: <span id="product-title-color-choice">White</span> </h3>
-            </legend>
+            
 
                 {% comment %} <div>
                     <input class="color-btn color-btn--selected" id="color-1" value="color-1" type="radio" name="color" data-color="White" checked> 
@@ -80,38 +90,41 @@
                 
             {% unless product.has_only_default_variant %}
                 {% for option in product.options_with_values %}
-                    <div id="swatch">
                         {% if option.name == "Color" %}
-                        {% assign index = forloop.index %}
-                        {% for value in option.values %}
-                        <div>
-                        {% if option.selected_value == value %}
-                            <input 
-                                type="radio" 
-                                class="color-btn color-btn--selected" 
-                                id="color-{{ forloop.index }}" 
-                                name="color" 
-                                value="{{ value | escape }}" 
-                                data-color="{{ value | escape }}"
-                                checked>
-                        {% else %}
-                            <input 
-                                type="radio" 
-                                class="color-btn" 
-                                id="color-{{ forloop.index }}" 
-                                name="color" 
-                                value="{{ value | escape }}" 
-                                data-color="{{ value | escape }}">
+                        <legend>
+                            <h3 class="product-title" id="product-title-color">Color: <span id="product-title-color-choice">White</span> </h3>
+                        </legend>
+                        <div id="swatch">
+                            {% assign index = forloop.index %}
+                            {% for value in option.values %}
+                            <div>
+                            {% if option.selected_value == value %}
+                                <input 
+                                    type="radio" 
+                                    class="color-btn color-btn--selected" 
+                                    id="color-{{ forloop.index }}" 
+                                    name="color" 
+                                    value="{{ value | escape }}" 
+                                    data-color="{{ value | escape }}"
+                                    checked>
+                            {% else %}
+                                <input 
+                                    type="radio" 
+                                    class="color-btn" 
+                                    id="color-{{ forloop.index }}" 
+                                    name="color" 
+                                    value="{{ value | escape }}" 
+                                    data-color="{{ value | escape }}">
+                            {% endif %}
+                                <label 
+                                    for="color-{{ forloop.index }}" 
+                                    class="color-btn-label">
+                                    <span>{{ value | escape }}</span>
+                                </label>
+                            </div>    
+                            {% endfor %}
+                        </div>
                         {% endif %}
-                            <label 
-                                for="color-{{ forloop.index }}" 
-                                class="color-btn-label">
-                                <span>{{ value | escape }}</span>
-                            </label>
-                        </div>    
-                        {% endfor %}
-                        {% endif %}
-                    </div>
                 {% endfor %}
             {% endunless %}
             <h3 class="product-title" id="product-title-qty">Quantity</h3>
