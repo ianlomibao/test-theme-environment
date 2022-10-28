@@ -1,6 +1,14 @@
 {{ 'test.css' | asset_url | stylesheet_tag }}
-{% comment %} <script src="{{ 'product-page.js' | asset_url }}" type="module"></script> {% endcomment %}
 <script src="{{ 'product-page-jquery.js' | asset_url }}" type="module" defer="defer"></script>
+{% style %}
+
+  {% for color in product.metafields.custom.product_colors.value %}
+    .color-btn-label[for="color-{{forloop.index}}"] {
+        background-color: {{ color }}
+    }
+  {% endfor %}
+
+{% endstyle %} 
 
 <nav>
     <div class="nav-section" id="nav-logo">
@@ -21,8 +29,7 @@
 
 <main id="product-container">
     
-    <section id="img-container">
-        {% comment %} TODO: Pull product variant images and make a button/img tag for each of them {% endcomment %}    
+    <section id="img-container"> 
         {% comment %} <div id="img-main">
             <img src="{{ 'bottle-white.webp' | asset_url }}" alt="500ml Insulated Bottle in White" class="product-image" id="main-image" loading="lazy" width="299" height="650">
         </div>
@@ -32,11 +39,6 @@
             <button class="carousel-btn"><img src="{{ 'bottle-black.webp' | asset_url }}" alt="500ml Insulated Bottle in Black" class="carousel-image" loading="lazy" width="299" height="650"></button>
             <button class="carousel-btn"><img src="{{ 'bottle-red.webp' | asset_url }}" alt="500ml Insulated Bottle in Red" class="carousel-image" loading="lazy" width="299" height="650"></button>
         </div> {% endcomment %}
-
-        {% comment %} {% liquid
-        assign options = product.options_with_values 
-        assign current_option = options.selected_value
-        %} {% endcomment %}
 
         <div id="img-main">
             {{ product.featured_image | image_url: width: 299| image_tag: class: 'product-image', id: 'main-image', loading: 'lazy' }}
@@ -52,19 +54,17 @@
     
     <section id="product-info">
 
-        {% comment %} TODO: Pull product name/price {% endcomment %}
         <div id="product-headers">
             <h1 id="product-name">{{ product.title }}</h1>
             <h2 id="price">{{ product.price | money }}</h2>
         </div>
     
-        <form id="product-options" action="/cart/add" method="post">
-
+        {% form 'product', product %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
             <legend>
                 <h3 class="product-title" id="product-title-color">Color: <span id="product-title-color-choice">White</span> </h3>
             </legend>
 
-            {% comment %} TODO: Pull product variant options and create input/label tags for them {% endcomment %}
                 {% comment %} <div>
                     <input class="color-btn color-btn--selected" id="color-1" value="color-1" type="radio" name="color" data-color="White" checked> 
                     <label class="color-btn-label" for="color-1"><span>White</span></label>
@@ -77,6 +77,7 @@
                     <input class="color-btn" id="color-3" value="color-3" type="radio" name="color" data-color="Red">
                     <label class="color-btn-label" for="color-3"><span>Red</span></label>
                 </div> {% endcomment %}
+                
             {% unless product.has_only_default_variant %}
                 {% for option in product.options_with_values %}
                     <div id="swatch">
@@ -85,11 +86,28 @@
                         {% for value in option.values %}
                         <div>
                         {% if option.selected_value == value %}
-                            <input type="radio" class="color-btn color-btn--selected" id="color-{{forloop.index}}" name="color" value="{{ value | escape }}" data-color="{{ value | escape }}" checked>
+                            <input 
+                                type="radio" 
+                                class="color-btn color-btn--selected" 
+                                id="color-{{ forloop.index }}" 
+                                name="color" 
+                                value="{{ value | escape }}" 
+                                data-color="{{ value | escape }}"
+                                checked>
                         {% else %}
-                            <input type="radio" class="color-btn" id="color-{{forloop.index}}" name="color" value="{{ value | escape }}" data-color="{{ value | escape }}">
+                            <input 
+                                type="radio" 
+                                class="color-btn" 
+                                id="color-{{ forloop.index }}" 
+                                name="color" 
+                                value="{{ value | escape }}" 
+                                data-color="{{ value | escape }}">
                         {% endif %}
-                            <label for="color-{{forloop.index}}" class="color-btn-label"><span>{{ value | escape }}</span></label>
+                            <label 
+                                for="color-{{ forloop.index }}" 
+                                class="color-btn-label">
+                                <span>{{ value | escape }}</span>
+                            </label>
                         </div>    
                         {% endfor %}
                         {% endif %}
@@ -106,7 +124,7 @@
             </div>
             <button id="atc" type="submit"> Add to Cart </button>
             
-        </form>
+        {% endform %}
 
         <div id="specs">
             <ul id="tabs" role="tablist">
@@ -141,8 +159,9 @@
                     <li>Lifetime guarantee</li>
                 </ul>
             </div> {% endcomment %}
-
+            <div id="description" role="tabpanel">
             {{ product.description }}
+            </div>
 
         </div>
     </section>
