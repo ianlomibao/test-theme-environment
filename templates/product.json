@@ -1,7 +1,7 @@
 {
     "sections": {
       "main": {
-        "type": "test"
+        "type": "product-page"
       }
     },
     "order": [

@@ -9,27 +9,46 @@ $(document).ready(function() {
 
     const update_product_choice = function(colorInput, carouselButton) 
     {
-        if(colorInput.attr("data-color") != titleColor.text()) 
-        {
-            const carouselImage = carouselButton.children("img");
-            titleColor.text(colorInput.attr("data-color"));
-            mainImage.attr({
-                src: carouselImage.attr("src"),
-                alt: carouselImage.attr("alt")
-            });
+        update_color_text(colorInput);
+        update_main_image(carouselButton);
+    };
 
-            $(".color-btn--selected").removeClass("color-btn--selected");
-            colorInput.addClass("color-btn--selected");
+    const update_color_text = function(colorInput) {
+        titleColor.text(colorInput.attr("value"));
+        $(".color-btn--selected").removeClass("color-btn--selected");
+        colorInput.addClass("color-btn--selected");
+    };
+
+    const update_main_image = function(carouselImage) {
+        // const carouselImage = carouselButton.children("img");
+        mainImage.attr({
+            src: carouselImage.attr("src"),
+            alt: carouselImage.attr("alt")
+        });
+    };
+
+    // for (var i = 0; i < colorSelectors.length; i++) 
+    // {
+    //     const colorInput = colorSelectors.eq(i),
+    //           carouselButton = carouselButtons.eq(i);
+    //     // colorInput.click(() => {update_product_choice(colorInput, carouselButton)});   
+    //     // carouselButton.click(() => {update_product_choice(colorInput, carouselButton)});
+    //     colorInput.on( "click", )
+    // };
+
+    // if image or swatch is attached to a variant
+    //  update both color text and image
+    $("#img-horizontal-carousel").on( "click", "button", function() {
+        update_main_image($(this).children("img"));
+    });
+
+    $("#swatch").on( "click", "input", function() {
+        update_color_text($(this));
+        const variantImage = $(".carousel-image[data-variants~="+$(this).attr("data-option-name")+"]");
+        if(variantImage != null) {
+            update_main_image(variantImage);
         }
-    };
-
-    for (var i = 0; i < colorSelectors.length; i++) 
-    {
-        const colorInput = colorSelectors.eq(i),
-              carouselButton = carouselButtons.eq(i);
-        colorInput.click(() => {update_product_choice(colorInput, carouselButton)});   
-        carouselButton.click(() => {update_product_choice(colorInput, carouselButton)});
-    };
+    });
 
     const update_qty = function(int) 
     {

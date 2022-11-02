@@ -4,6 +4,7 @@ Bugs/Limitations:
         - Images not assigned to a color aren't shown when clicked
         - FIX: Add function to update main image when a carousel thumbnail is clicked
     - Product images, color variants, and color metadata must all be sorted in the same order
+        - FIX: Have attribute tags that connect variant images to color variants
     - Only 1 image per color variant
         - FIX: Add data-color attribute for each color variation, refactor JS so that the 
             thumbnail buttons aren't connected to swatch buttons according to array order
@@ -11,7 +12,7 @@ Bugs/Limitations:
     - Image carousel and color swatch don't automatically scroll to the image that is being displayed when a color is selected
 {% endcomment %}
 
-{{ 'test.css' | asset_url | stylesheet_tag }}
+{{ 'product-page.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'product-page-jquery.js' | asset_url }}" type="module" defer="defer"></script>
 {% style %}
 
@@ -58,8 +59,23 @@ Bugs/Limitations:
         </div>
 
         <div id="img-horizontal-carousel">
-        {% for image in product.images %}                
-            <button class="carousel-btn">{{ image | image_url: width: 299 | image_tag: class: 'carousel-image', loading: 'lazy' }}</button>
+        {% for image in product.images %}
+            {% comment %} if image has a product variant attached to it, give it an attribute of data-variant  ideally attach each option associated with the image {% endcomment %}
+            {% comment %} <button class="carousel-btn">{{ image | image_url: width: 299 | image_tag: class: 'carousel-image', loading: 'lazy' }}</button> {% endcomment %}
+            <button class="carousel-btn" id="{{ image.id }}">
+            <img 
+              src="{{ image | image_url: width: image.width }}" 
+              alt="{{ image.alt }}" 
+              class="carousel-image" 
+              id="{{ image.id }}"
+              loading="lazy"
+              {% if image.attached_to_variant? %}
+              data-variants="
+              {% for variant in image.variants %}
+                {{ variant.title | replace: ' ', '-'}}
+              {% endfor %}"
+              {% endif %}>
+            </button>
         {% endfor %}
         </div>
 
@@ -99,24 +115,17 @@ Bugs/Limitations:
                             {% assign index = forloop.index %}
                             {% for value in option.values %}
                             <div>
-                            {% if option.selected_value == value %}
+                            
                                 <input 
                                     type="radio" 
-                                    class="color-btn color-btn--selected" 
+                                    class="color-btn {% if option.selected_value == value %} color-btn--selected {% endif %}" 
                                     id="color-{{ forloop.index }}" 
                                     name="color" 
-                                    value="{{ value | escape }}" 
-                                    data-color="{{ value | escape }}"
-                                    checked>
-                            {% else %}
-                                <input 
-                                    type="radio" 
-                                    class="color-btn" 
-                                    id="color-{{ forloop.index }}" 
-                                    name="color" 
-                                    value="{{ value | escape }}" 
-                                    data-color="{{ value | escape }}">
-                            {% endif %}
+                                    value="{{ value | escape }}"
+                                    data-option-name="{{ value | replace: ' ', '-' | escape }}"
+                                    {% if option.selected_value == value %} checked {% endif %}>
+
+                            
                                 <label 
                                     for="color-{{ forloop.index }}" 
                                     class="color-btn-label">
@@ -131,9 +140,9 @@ Bugs/Limitations:
             <h3 class="product-title" id="product-title-qty">Quantity</h3>
             <div id="grid-qty-atc">
                 <div id="qty-wrapper">
-                    <span class="qty-adjust" id="minus">-</span>
+                    <span class="qty-adjust" qty="-1" id="minus">-</span>
                     <input type="number" name="qty" id="qty-box" min="1" value="1" inputmode="numeric">
-                    <span class="qty-adjust" id="plus">+</span>
+                    <span class="qty-adjust" qty="1" id="plus">+</span>
                 </div>
             </div>
             <button id="atc" type="submit"> Add to Cart </button>
