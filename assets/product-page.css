@@ -94,8 +94,8 @@ form {
     display: flex;
     justify-items: left;
     position: relative;
-    column-gap: clamp(0.5rem, 1vw, 1rem);
-    row-gap: clamp(0.25rem, 1.5vh, 0.5rem);
+    column-gap: clamp(0.5rem, 0.5vw, 0.8rem);
+    row-gap: clamp(0.3rem, 1.5vh, 0.5rem);
     flex-wrap: wrap;
     padding-bottom: 0.5rem;
 }
@@ -125,7 +125,7 @@ form {
     position: absolute;
 }
 
-.color-btn--selected ~ label {
+.selected ~ label {
     border-width: 3px;
     border-color: rgb(var(--dark-accent));
 }
