@@ -3,13 +3,15 @@ Bugs/Limitations:
     - Can only have product images that correspond to color variants
         - Images not assigned to a color aren't shown when clicked
         - FIX: Add function to update main image when a carousel thumbnail is clicked
-    - Product images, color variants, and color metadata must all be sorted in the same order
+    - Product images, color variants, and color metadata must all be sorted in
+        the same order
         - FIX: Have attribute tags that connect variant images to color variants
     - Only 1 image per color variant
         - FIX: Add data-color attribute for each color variation, refactor JS so that the 
             thumbnail buttons aren't connected to swatch buttons according to array order
     - Image carousel does not highlight which image is being displayed
-    - Image carousel and color swatch don't automatically scroll to the image that is being displayed when a color is selected
+    - Image carousel and color swatch don't automatically scroll to the image
+        that is being displayed when a color is selected
 {% endcomment %}
 
 {{ 'product-page.css' | asset_url | stylesheet_tag }}
@@ -44,24 +46,13 @@ Bugs/Limitations:
 <main id="product-container">
     
     <section id="img-container"> 
-        {% comment %} <div id="img-main">
-            <img src="{{ 'bottle-white.webp' | asset_url }}" alt="500ml Insulated Bottle in White" class="product-image" id="main-image" loading="lazy" width="299" height="650">
-        </div>
-
-        <div id="img-horizontal-carousel">
-            <button class="carousel-btn"><img src="{{ 'bottle-white.webp' | asset_url }}" alt="500ml Insulated Bottle in White" class="carousel-image" loading="lazy" width="299" height="650"></button>
-            <button class="carousel-btn"><img src="{{ 'bottle-black.webp' | asset_url }}" alt="500ml Insulated Bottle in Black" class="carousel-image" loading="lazy" width="299" height="650"></button>
-            <button class="carousel-btn"><img src="{{ 'bottle-red.webp' | asset_url }}" alt="500ml Insulated Bottle in Red" class="carousel-image" loading="lazy" width="299" height="650"></button>
-        </div> {% endcomment %}
-
+    
         <div id="img-main">
             {{ product.featured_image | image_url: width: 299| image_tag: class: 'product-image', id: 'main-image', loading: 'lazy' }}
         </div>
 
         <div id="img-horizontal-carousel">
         {% for image in product.images %}
-            {% comment %} if image has a product variant attached to it, give it an attribute of data-variant  ideally attach each option associated with the image {% endcomment %}
-            {% comment %} <button class="carousel-btn">{{ image | image_url: width: 299 | image_tag: class: 'carousel-image', loading: 'lazy' }}</button> {% endcomment %}
             <button class="carousel-btn" id="{{ image.id }}">
             <img 
               src="{{ image | image_url: width: image.width }}" 
@@ -72,7 +63,7 @@ Bugs/Limitations:
               {% if image.attached_to_variant? %}
               data-variants="
               {% for variant in image.variants %}
-                {{ variant.title | replace: ' ', '-'}}
+                {{ variant.title | replace: ' ', '-' | replace: '-/-', ' ' }}
               {% endfor %}"
               {% endif %}>
             </button>
@@ -90,21 +81,7 @@ Bugs/Limitations:
     
         {% form 'product', product %}
         <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-            
-
-                {% comment %} <div>
-                    <input class="color-btn color-btn--selected" id="color-1" value="color-1" type="radio" name="color" data-color="White" checked> 
-                    <label class="color-btn-label" for="color-1"><span>White</span></label>
-                </div>
-                <div>
-                    <input class="color-btn" id="color-2" value="color-2" type="radio" name="color" data-color="Black">
-                    <label class="color-btn-label" for="color-2"><span>Black</span></label>
-                </div>
-                <div>
-                    <input class="color-btn" id="color-3" value="color-3" type="radio" name="color" data-color="Red">
-                    <label class="color-btn-label" for="color-3"><span>Red</span></label>
-                </div> {% endcomment %}
-                
+     
             {% unless product.has_only_default_variant %}
                 {% for option in product.options_with_values %}
                         {% if option.name == "Color" %}
@@ -115,17 +92,15 @@ Bugs/Limitations:
                             {% assign index = forloop.index %}
                             {% for value in option.values %}
                             <div>
-                            
                                 <input 
                                     type="radio" 
-                                    class="color-btn {% if option.selected_value == value %} color-btn--selected {% endif %}" 
+                                    class="color-btn {% if option.selected_value == value %} selected {% endif %}" 
                                     id="color-{{ forloop.index }}" 
                                     name="color" 
                                     value="{{ value | escape }}"
                                     data-option-name="{{ value | replace: ' ', '-' | escape }}"
-                                    {% if option.selected_value == value %} checked {% endif %}>
-
-                            
+                                    {% if option.selected_value == value %} checked {% endif %}
+                                >
                                 <label 
                                     for="color-{{ forloop.index }}" 
                                     class="color-btn-label">
@@ -137,7 +112,9 @@ Bugs/Limitations:
                         {% endif %}
                 {% endfor %}
             {% endunless %}
+
             <h3 class="product-title" id="product-title-qty">Quantity</h3>
+
             <div id="grid-qty-atc">
                 <div id="qty-wrapper">
                     <span class="qty-adjust" qty="-1" id="minus">-</span>
@@ -145,43 +122,17 @@ Bugs/Limitations:
                     <span class="qty-adjust" qty="1" id="plus">+</span>
                 </div>
             </div>
+            
             <button id="atc" type="submit"> Add to Cart </button>
             
         {% endform %}
 
         <div id="specs">
+
             <ul id="tabs" role="tablist">
                 <li><a href="#" role="tab">Overview</a></li>
             </ul>
 
-            {% comment %} <div id="description" role="tabpanel">
-            <h3>Description</h3>
-                <p>
-                    Designed so that you can enjoy your drinks the way you want all throughout the day, because our bottles keep liquids cold for 24 hours and hot for 12 hours. Made from double-layered medical-grade stainless steel, this helps you eliminate your dependency on plastic without having to use another plastic reusable container. Perfect for taking on-the-go.
-                </p>
-                <p>
-                    No more fiddling. No more faff. Just water with you, wherever.
-                </p>
-                <p>
-                    You also get free water refills from over 800 locations with The Water Network.
-                </p>
-                <p>
-                    What’s more, every GiveMeTap bottle sold provides someone living in Africa with 10 years of clean water. Now that’s what we call win-win-win.
-                </p>
-            </div>
-            <div id="details" role="tabpanel">
-            <h3>Details</h3>
-                <ul>
-                    <li> <strong>Dimensions:</strong> Base: 6.5 cm, Wide Point: 8 cm, Height: 24.5cm; Weighs: 347g/0.76 lb, Holds: 500ml/17oz</li>
-                    <li>Keeps liquids cold for up to 24 hours or hot for up to 12 hours.</li>
-                    <li>BPA free, 100% free of toxins and no phthalates or PVC.</li>
-                    <li>316 medical grade stainless steel which won’t transfer flavour. Silicone ring. Silicone bottom grip.</li>
-                    <li>Opening fits standard ice cubes (and stops you getting splashed in the face)</li>
-                    <li>Cup holder compatible</li>
-                    <li>Hand wash only. Do not microwave.</li>
-                    <li>Lifetime guarantee</li>
-                </ul>
-            </div> {% endcomment %}
             <div id="description" role="tabpanel">
             {{ product.description }}
             </div>
