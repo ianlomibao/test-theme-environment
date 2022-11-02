@@ -21,9 +21,9 @@ window.addEventListener('DOMContentLoaded', function() {
                 mainImage.src = carouselImageSrc;
                 mainImage.alt = carouselImageAlt;
 
-                const inputColorSelected = document.querySelector('.color-btn--selected');
-                inputColorSelected.classList.remove("color-btn--selected")
-                colorInput.classList.add("color-btn--selected")
+                const inputColorSelected = document.querySelector('.selected');
+                inputColorSelected.classList.remove("selected")
+                colorInput.classList.add("selected")
             }
         }
 
