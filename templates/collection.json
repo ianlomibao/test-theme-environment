@@ -1,7 +1,7 @@
 {
     "sections": {
       "main": {
-        "type": "header"
+        "type": "collection-page"
       }
     },
     "order": [
