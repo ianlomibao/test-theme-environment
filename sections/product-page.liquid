@@ -34,6 +34,7 @@ Bugs/Limitations:
     </div>
 
     <div class="nav-section" id="nav-categories">
+        <a href="{{ routes.root_url }}">Home</a>
         <a href="#">Our Bottles</a>
         <a href="#">Our Impacts</a>
         <a href="#">Our Story</a>
@@ -48,24 +49,46 @@ Bugs/Limitations:
     <section id="img-container"> 
     
         <div id="img-main">
-            {{ product.featured_image | image_url: width: 299| image_tag: class: 'product-image', id: 'main-image', loading: 'lazy' }}
+            <img
+                id='main-image'
+                class='product-image'
+                srcset="{% if product.featured_image.width >= 288 %}{{ product.featured_image | image_url: width: 288 }} 288w,{% endif %}
+                {% if product.featured_image.width >= 576 %}{{ product.featured_image | image_url: width: 576 }} 576w,{% endif %}
+                {% if product.featured_image.width >= 550 %}{{ product.featured_image | image_url: width: 550 }} 550w,{% endif %}
+                {% if product.featured_image.width >= 1100 %}{{ product.featured_image | image_url: width: 1100 }} 1100w,{% endif %}
+                {{ product.featured_image | image_url }} {{ product.featured_image.width }}w"
+                src="{{ product.featured_image | image_url: width: 550, height: 550 }}"
+                sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
+                loading="lazy"
+                width="576"
+                height="{{ 576 | divided_by: product.featured_image.aspect_ratio }}"
+                alt="{{ product.featured_image.alt | escape }}"
+      >
         </div>
 
         <div id="img-horizontal-carousel">
         {% for image in product.images %}
-            <button class="carousel-btn" id="{{ image.id }}">
-            <img 
-              src="{{ image | image_url: width: image.width }}" 
-              alt="{{ image.alt }}" 
-              class="carousel-image" 
-              id="{{ image.id }}"
-              loading="lazy"
-              {% if image.attached_to_variant? %}
-              data-variants="
-              {% for variant in image.variants %}
-                {{ variant.title | replace: ' ', '-' | replace: '-/-', ' ' }}
-              {% endfor %}"
-              {% endif %}>
+            <button class="carousel-btn">
+                <img 
+                  class="carousel-image" 
+                  id="{{ image.id }}"
+                  srcset="
+                  {% if image.width >= 104 %}{{ image | image_url: width: 104 }} 104w,{% endif %}
+                  {% if image.width >= 288 %}{{ image | image_url: width: 288 }} 288w,{% endif %}
+                  {% if image.width >= 576 %}{{ image | image_url: width: 576 }} 576w,{% endif %}
+                  {% if image.width >= 550 %}{{ image | image_url: width: 550 }} 550w,{% endif %}
+                  {% if image.width >= 1100 %}{{ image | image_url: width: 1100 }} 1100w,{% endif %}
+                  {{ image | image_url }} {{ image.width }}w"
+                  src="{{ image | image_url: width: 104 }}"
+                  alt="{{ media.alt | escape }}"
+                  loading="lazy"
+                  width="70"
+                  {% if image.attached_to_variant? %}
+                  data-variants="
+                  {% for variant in image.variants %}
+                    {{ variant.title | replace: ' ', '-' | replace: '-/-', ' ' }}
+                  {% endfor %}"
+                  {% endif %}>
             </button>
         {% endfor %}
         </div>

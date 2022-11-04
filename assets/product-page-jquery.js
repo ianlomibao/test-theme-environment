@@ -4,13 +4,14 @@ $(document).ready(function() {
     const update_option_header = function(optionContainer, optionTitle, optionInput) {
         optionTitle.text(optionInput.attr("value"));
         optionContainer.find("input.selected").removeClass("selected");
-        optionInput.addClass("selected")
+        optionInput.addClass("selected");
     }
 
     const update_main_image = function(image) {
         $("#main-image").attr({
             src: image.attr("src"),
-            alt: image.attr("alt")
+            alt: image.attr("alt"),
+            srcset: image.attr("srcset")
         });
     };
 

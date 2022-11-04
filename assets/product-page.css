@@ -18,44 +18,53 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items:flex-start;
-    position:relative;
+    align-items: flex-start;
+    position: relative;
     gap: 30px;
 }
 
 #img-container {
-    flex-shrink: 0;
-    max-width: 25vw;
-    width: 100%;
-    max-height: fit-content;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    position: inherit;
+    box-sizing: border-box;
+    width: auto;
+    max-width: 45vw;
+    max-height: 60vh;
+    height: fit-content;
 }
 
 #img-main {
-    width: auto;
+    max-height: 50vh;
     border: 1px solid #d8d8d8;
     margin-bottom: 10px;
     background-color: var(--image-bg);
+    display: grid;
+    place-items: center;
+}
+
+#img-main img {
+    aspect-ratio: auto;
+    max-width: 40vw;
+    max-height: 50vh;
+    object-fit: scale-down;
 }
 
 #img-horizontal-carousel {
+    height: 7.5vh;
     display: flex;
     flex-wrap: nowrap;
     overflow-x: scroll;
-    height: fit-content;
     gap: 3px;
 }
 
 .carousel-btn {
+    height: 5.5vh;
     background-color: rgb(var(--color-bg));
     border: 1px solid #d8d8d8;
 }
 
 .carousel-image {
-    height: 60px;
-    width: auto;
+    height: 5.5vh;
+    object-fit: contain;
 }
 
 #product-info {
@@ -109,7 +118,6 @@ form {
     cursor: pointer;
     display: block;
     aspect-ratio: 1 / 1;
-    /* margin-bottom: clamp(); */
     width: 32px;
     padding: var(--button-padding);
     background-clip: content-box;
@@ -208,19 +216,20 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     
     #product-container {
-        /* flex-direction:column; */
+        flex-direction:column;
         align-items:center;
-        gap: 40px;
+        gap: 2rem;
     }
 
     #img-container {
-        max-height: 50vh;
-        max-width: min-content;
+        max-height: 60vh;
+        max-width: 80vw;
     }
 
-    .product-image {
-        max-height: 45vh;
-        width: auto;
+    #img-main img {
+        height: auto;
+        max-height: 50vh;
+        max-width: 80vw;
     }
 
     .product {
