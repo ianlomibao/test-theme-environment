@@ -8,28 +8,16 @@ $(document).ready(function() {
     }
 
     const update_main_image = function(image) {
-        $("#main-image").attr({
+        $("img#main-image").attr({
             src: image.attr("src"),
             alt: image.attr("alt"),
             srcset: image.attr("srcset")
         });
     };
 
-    $("#img-horizontal-carousel").on( "click", "button", function() {
-        update_main_image($(this).children("img"));
-    });
-
-    $("#swatch").on( "click", "input", function() {
-        update_option_header($("#swatch"), $("#product-title-color-choice"), $(this));
-        const variantImage = $(".carousel-image[data-variants~="+$(this).attr("data-option-name")+"]");
-        if(variantImage != null) {
-            update_main_image(variantImage);
-        }
-    });
-
     const update_qty = function(int) 
     {
-        const qtyValue = $("#qty-box");
+        const qtyValue = $("input#qty-box");
         if(!(qtyValue[0].checkValidity())) 
         {
             qtyValue.val(1);
@@ -42,6 +30,19 @@ $(document).ready(function() {
             }
         }
     };
+
+    $("#img-horizontal-carousel").on( "click", "button", function() {
+        update_main_image($(this).children("img"));
+    });
+
+    $("#swatch").on( "click", "input", function() {
+        update_option_header($("#swatch"), $("#product-title-color-choice"), $(this));
+        const optionName = $(this).attr("data-option-name");
+        const variantImage = $("img.carousel-image[data-variants~="+optionName+"]");
+        if(variantImage != null) {
+            update_main_image(variantImage);
+        }
+    });
 
     $(".qty-adjust").on("click", function() {
         update_qty($(this).attr("qty"));

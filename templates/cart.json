@@ -1,5 +1,8 @@
 {
     "sections": {
+      "header": {
+        "type": "header"
+      },
       "main": {
         "type": "cart-page"
       }

@@ -32,7 +32,7 @@ body {
     height: fit-content;
 }
 
-#img-main {
+#main-image-wrapper {
     max-height: 50vh;
     border: 1px solid #d8d8d8;
     margin-bottom: 10px;
@@ -41,7 +41,7 @@ body {
     place-items: center;
 }
 
-#img-main img {
+#main-image-wrapper img {
     aspect-ratio: auto;
     max-width: 40vw;
     max-height: 50vh;
@@ -86,6 +86,10 @@ body {
 
 form {
     margin-top: 1.5rem;
+}
+
+select#product-select {
+    display: none;
 }
 
 .product-title {
@@ -226,7 +230,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         max-width: 80vw;
     }
 
-    #img-main img {
+    #main-image-wrapper img {
         height: auto;
         max-height: 50vh;
         max-width: 80vw;

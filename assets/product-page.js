@@ -5,7 +5,7 @@ window.addEventListener('DOMContentLoaded', function() {
     const titleColor = document.getElementById('product-title-color-choice'),
           colorSelectors = document.getElementsByClassName('color-btn'),
           carouselButtons = document.getElementsByClassName('carousel-btn'),
-          mainImage = document.getElementById('img-main').firstElementChild;
+          mainImage = document.getElementById('main-image-wrapper').firstElementChild;
 
     for (let i = 0; i < colorSelectors.length; i++) {
         const colorInput = colorSelectors[i],
