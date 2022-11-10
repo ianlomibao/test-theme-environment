@@ -8,6 +8,6 @@
       }
     },
     "order": [
-      "main"
+      "header", "main"
     ]
   }
