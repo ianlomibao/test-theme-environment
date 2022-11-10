@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded', function() {
     console.log('product-page.js loaded in')
 
     // changes the chosen and main image on product page to match the color selection
-    const titleColor = document.getElementById('product-title-color-choice'),
+    const titleColor = document.getElementById('selected-color-name'),
           colorSelectors = document.getElementsByClassName('color-btn'),
           carouselButtons = document.getElementsByClassName('carousel-btn'),
           mainImage = document.getElementById('main-image-wrapper').firstElementChild;
