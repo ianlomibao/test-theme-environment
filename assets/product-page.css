@@ -88,6 +88,10 @@ form {
     margin-top: 1.5rem;
 }
 
+.selector-wrapper {
+    display: none;
+}
+
 select#product-select {
     display: none;
 }
@@ -98,7 +102,7 @@ select#product-select {
     margin-bottom: 0.7rem;
 }
 
-#product-title-color-choice {
+#selected-color-name {
     font-weight: 600;
 }
 
