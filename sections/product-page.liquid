@@ -1,12 +1,12 @@
 {% comment %} 
 Bugs/Limitations:
-    - Can only have product images that correspond to color variants
+    - Can only have product images that correspond to color variants [RESOLVED: Liquid refactored; images that aren't tied to variants are now supported.]
         - Images not assigned to a color aren't shown when clicked
         - FIX: Add function to update main image when a carousel thumbnail is clicked
     - Product images, color variants, and color metadata must all be sorted in
         the same order
         - FIX: Have attribute tags that connect variant images to color variants
-    - Only 1 image per color variant
+    - Only 1 image per color variant [RESOLVED: Shopify default behavior, requires complex workarounds/apps to solve]
         - FIX: Add data-color attribute for each color variation, refactor JS so that the 
             thumbnail buttons aren't connected to swatch buttons according to array order
     - Image carousel does not highlight which image is being displayed
@@ -50,50 +50,82 @@ Bugs/Limitations:
     
     <section id="img-container"> 
     
-        <div id="main-image-wrapper">
-            <img
-                id='main-image'
-                class='product-image'
-                srcset="{% if product.featured_image.width >= 288 %}{{ product.featured_image | image_url: width: 288 }} 288w,{% endif %}
-                {% if product.featured_image.width >= 576 %}{{ product.featured_image | image_url: width: 576 }} 576w,{% endif %}
-                {% if product.featured_image.width >= 550 %}{{ product.featured_image | image_url: width: 550 }} 550w,{% endif %}
-                {% if product.featured_image.width >= 1100 %}{{ product.featured_image | image_url: width: 1100 }} 1100w,{% endif %}
-                {{ product.featured_image | image_url }} {{ product.featured_image.width }}w"
-                src="{{ product.featured_image | image_url: width: 550, height: 550 }}"
-                sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
-                loading="lazy"
-                width="576"
-                height="{{ 576 | divided_by: product.featured_image.aspect_ratio }}"
-                alt="{{ product.featured_image.alt | escape }}"
-      >
-        </div>
-
         {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
 
+        <div id="main-image-wrapper">
+            <ul>
+            {%- assign featured_media = product.selected_or_first_available_variant.featured_media -%}
+            {%- if product.selected_or_first_available_variant.featured_media != null -%}
+                <li 
+                  class="product-media-item is-active{% if variant_images contains featured_media.src %} product-media-item--variant{% endif %}"
+                >
+                    <img
+                      class="product-image"
+                      srcset="
+                      {% if featured_media.width >= 288 %}{{ featured_media | image_url: width: 288 }} 288w,{% endif %}
+                      {% if featured_media.width >= 576 %}{{ featured_media | image_url: width: 576 }} 576w,{% endif %}
+                      {% if featured_media.width >= 550 %}{{ featured_media | image_url: width: 550 }} 550w,{% endif %}
+                      {% if featured_media.width >= 1100 %}{{ featured_media | image_url: width: 1100 }} 1100w,{% endif %}"
+                      src="{{ featured_media | image_url: width: 1100 }}"
+                      sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
+                      loading="lazy"
+                      width="576"
+                      media-id="{{ featured_media.id }}"
+                      alt="{{ featured_media.alt | escape }}"
+                    >
+                </li>
+            {%- endif -%}
+            {% for image in product.images %}
+              {% unless image.id == featured_media.id %}
+                <li
+                  class="product-media-item{% if product.selected_or_first_available_variant.featured_media == null and forloop.index == 1 %} is-active{% endif %}{% if variant_images contains image.src %} product-media-item--variant{% endif %}"
+                >
+                    <img
+                      class="product-image"
+                      srcset="
+                      {% if image.width >= 288 %}{{ image | image_url: width: 288 }} 288w,{% endif %}
+                      {% if image.width >= 576 %}{{ image | image_url: width: 576 }} 576w,{% endif %}
+                      {% if image.width >= 550 %}{{ image | image_url: width: 550 }} 550w,{% endif %}
+                      {% if image.width >= 1100 %}{{ image | image_url: width: 1100 }} 1100w,{% endif %}"
+                      src="{{ image | image_url: width: 1100 }}"
+                      sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
+                      loading="lazy"
+                      width="576"
+                      media-id="{{ image.id }}"
+                      alt="{{ image.alt | escape }}"
+                    >
+                </li>
+              {% endunless %}
+            {% endfor %}
+            </ul>
+        </div>
+
         <div id="img-horizontal-carousel">
-        {% for image in product.images %}
-            <button class="carousel-btn">
+          {%- if product.selected_or_first_available_variant.featured_media != null -%}
+            <button class="carousel-btn carousel--is-active{% if variant_images contains featured_media.src %} carousel-btn--variant{% endif %}">
                 <img 
                   class="carousel-image" 
-                  id="{{ image.id }}"
-                  srcset="
-                  {% if image.width >= 104 %}{{ image | image_url: width: 104 }} 104w,{% endif %}
-                  {% if image.width >= 288 %}{{ image | image_url: width: 288 }} 288w,{% endif %}
-                  {% if image.width >= 576 %}{{ image | image_url: width: 576 }} 576w,{% endif %}
-                  {% if image.width >= 550 %}{{ image | image_url: width: 550 }} 550w,{% endif %}
-                  {% if image.width >= 1100 %}{{ image | image_url: width: 1100 }} 1100w,{% endif %}
-                  {{ image | image_url }} {{ image.width }}w"
-                  src="{{ image | image_url: width: 104 }}"
-                  alt="{{ media.alt | escape }}"
+                  src="{{ featured_media | image_url: width: 70 }}"
                   loading="lazy"
                   width="70"
-                  {% if image.attached_to_variant? %}
-                  data-variants="
-                  {% for variant in image.variants %}
-                    {{ variant.title | replace: ' ', '-' | replace: '-/-', ' ' }}
-                  {% endfor %}"
-                  {% endif %}>
+                  alt="{{ featured_media.alt | escape }}"
+                  media-id="{{ featured_media.id }}"
+                >
             </button>
+          {%- endif -%}
+        {% for image in product.images %}
+          {% unless image.id == featured_media.id %}
+            <button class="carousel-btn{% if variant_images contains image.src %} carousel-btn--variant{% else %} carousel--is-active{% endif %}">
+                <img 
+                  class="carousel-image" 
+                  src="{{ image | image_url: width: 70 }}"
+                  loading="lazy"
+                  width="70"
+                  alt="{{ image.alt | escape }}"
+                  media-id="{{ image.id }}"
+                >
+            </button>
+          {% endunless %}
         {% endfor %}
         </div>
 
@@ -122,11 +154,15 @@ Bugs/Limitations:
         <script>
             var selectCallback = function(variant, selector) {
                 if (variant) {
+                    const currentImage = $("li.product-media-item.is-active > img");
+                    if(variant.featured_image.id != currentImage.attr("media-id")) {
+                        const variantImageContainer = $("li.product-media-item > img[media-id="+variant.featured_image.id+"]").parent();
+                        currentImage.parent().removeClass("is-active");
+                        variantImageContainer.addClass("is-active");
+                    }
                     if(variant.available) {
-
                     }
                     else {
-
                     }
                 }
                 else {

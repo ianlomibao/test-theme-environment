@@ -16,11 +16,12 @@ $(document).ready(function() {
     };
 
     const update_main_image = function(image) {
-        $("img#main-image").attr({
-            src: image.attr("src"),
-            alt: image.attr("alt"),
-            srcset: image.attr("srcset")
-        });
+        // $("img#main-image").attr({
+        //     src: image.attr("src"),
+        //     alt: image.attr("alt"),
+        //     srcset: image.attr("srcset")
+        // });
+        
     };
 
     const update_qty = function(int) 
@@ -57,3 +58,21 @@ $(document).ready(function() {
     });
     
 });
+
+// export default function() {
+//     console.log("product-page-jquery.js loaded in");
+// }
+
+// export function selectCallback(variant, selector) {
+//     if (variant) {
+//         if (variant.available) {
+            
+//         }
+//         else {
+
+//         }
+//     }
+//     else {
+
+//     }
+// }
