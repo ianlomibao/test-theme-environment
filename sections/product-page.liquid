@@ -19,13 +19,12 @@ Bugs/Limitations:
 {{ 'option_selection.js' | shopify_asset_url | script_tag }}
 <script src="{{ 'product-page-jquery.js' | asset_url }}" type="module" defer="defer"></script>
 {% style %}
-
-  {% for color in product.metafields.custom.product_colors.value %}
-    .color-btn-label[for="color-{{forloop.index}}"] {
-        background-color: {{ color }}
+  {% assign colorOptions = product.options_with_values | where: "name", "Color" %}
+  {% for value in colorOptions[0].values %}
+    .color-btn-label[data-option-name="{{ value | handleize }}"] {
+        background-color: var(--{{ value | handleize }});
     }
   {% endfor %}
-
 {% endstyle %} 
 
 {% comment %} <nav>
@@ -201,13 +200,13 @@ Bugs/Limitations:
                                     id="color-{{ forloop.index }}" 
                                     name="color" 
                                     value="{{ value | escape }}"
-                                    data-option-name="{{ value | replace: ' ', '-' | escape }}"
                                     option-index="{{index}}"
                                     {% if option.selected_value == value %} checked {% endif %}
                                 >
                                 <label 
                                     for="color-{{ forloop.index }}" 
-                                    class="color-btn-label">
+                                    class="color-btn-label"
+                                    data-option-name="{{ value | handleize }}">
                                     <span>{{ value | escape }}</span>
                                 </label>
                             </div>    
