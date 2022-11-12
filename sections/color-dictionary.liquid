@@ -1,0 +1,32 @@
+{% comment %} 
+Create a section with blocks.
+
+Each block will have a color field and text field. The text field will be the placeholder for the color name.
+
+So when you loop your variants you take the color field value and apply it to the swatch. 
+{% endcomment %}
+
+{% schema %}
+{
+    "blocks": [
+        {
+            "name": "Color Dictionary",
+            "type": "color-dict",
+            "settings": [
+                {
+                    "type": "color",
+                    "id": "color_value",
+                    "label": "Color Value",
+                    "default": "#000000"
+                },
+                {
+                    "type": "text",
+                    "id": "color_name",
+                    "label": "Color Name",
+                    "default": "Color"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}
