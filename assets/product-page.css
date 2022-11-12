@@ -78,7 +78,8 @@ li.product-media-item.is-active {
 }
 
 button.carousel-btn {
-    height: fit-content;
+    height: 60px;
+    width: 60px;
     padding: 5px;
     background-color: var(--image-bg);
     border: 1px solid #d8d8d8;
@@ -90,12 +91,13 @@ button.carousel-btn--variant {
     display: none;
 }
 
-button.carousel--is-active {
+button.is-active {
     display: block;
 }
 
 img.carousel-image {
-    height: auto;
+    height: 50px;
+    width: 50px;
     max-height: 80px;
     object-fit: contain;
 }
@@ -263,13 +265,12 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
 
     #img-container {
-        max-height: 60vh;
+        height: 60vh;
         max-width: 80vw;
     }
 
     li.product-media-item img {
-        height: auto;
-        max-height: 50vh;
+        height: 50vh;
         max-width: 70vw;
     }
 

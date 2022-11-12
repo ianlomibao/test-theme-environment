@@ -16,12 +16,13 @@ $(document).ready(function() {
     };
 
     const update_main_image = function(image) {
-        // $("img#main-image").attr({
-        //     src: image.attr("src"),
-        //     alt: image.attr("alt"),
-        //     srcset: image.attr("srcset")
-        // });
-        
+        const imageId = image.attr("media-id");
+        const currentImage = $("li.product-media-item.is-active > img");
+        if(imageId != currentImage.attr("media-id")) {
+            const variantImageContainer = $("li.product-media-item > img[media-id="+imageId+"]").parent();
+            currentImage.parent().removeClass("is-active");
+            variantImageContainer.addClass("is-active");
+        }
     };
 
     const update_qty = function(int) 
@@ -46,11 +47,6 @@ $(document).ready(function() {
 
     $("#swatch").on( "click", "input", function() {
         update_option_header($("#swatch"), $("#selected-color-name"), $(this));
-        // const optionName = $(this).attr("data-option-name");
-        // const variantImage = $("img.carousel-image[data-variants~="+optionName+"]");
-        // if(variantImage != null) {
-        //     update_main_image(variantImage);
-        // }
     });
 
     $(".qty-adjust").on("click", function() {

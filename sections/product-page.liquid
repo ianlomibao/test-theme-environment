@@ -28,7 +28,7 @@ Bugs/Limitations:
 
 {% endstyle %} 
 
-<nav>
+{% comment %} <nav>
     <div class="nav-section" id="nav-logo">
         <a href="#">
         
@@ -44,7 +44,7 @@ Bugs/Limitations:
 
     <div class="nav-section" id="nav-cart">
     </div>
-</nav>
+</nav> {% endcomment %}
 
 <main id="product-container">
     
@@ -102,7 +102,7 @@ Bugs/Limitations:
 
         <div id="img-horizontal-carousel">
           {%- if product.selected_or_first_available_variant.featured_media != null -%}
-            <button class="carousel-btn carousel--is-active{% if variant_images contains featured_media.src %} carousel-btn--variant{% endif %}">
+            <button class="carousel-btn is-active carousel-selected-variant{% if variant_images contains featured_media.src %} carousel-btn--variant{% endif %}">
                 <img 
                   class="carousel-image" 
                   src="{{ featured_media | image_url: width: 70 }}"
@@ -115,7 +115,7 @@ Bugs/Limitations:
           {%- endif -%}
         {% for image in product.images %}
           {% unless image.id == featured_media.id %}
-            <button class="carousel-btn{% if variant_images contains image.src %} carousel-btn--variant{% else %} carousel--is-active{% endif %}">
+            <button class="carousel-btn{% if variant_images contains image.src %} carousel-btn--variant{% else %} is-active{% endif %}">
                 <img 
                   class="carousel-image" 
                   src="{{ image | image_url: width: 70 }}"
@@ -135,7 +135,7 @@ Bugs/Limitations:
 
         <div id="product-headers">
             <h1 id="product-name">{{ product.title }}</h1>
-            <h2 id="price">{{ product.price | money }}</h2>
+            <h2 id="price">{{ product.selected_or_first_available_variant.price | money }}</h2>
         </div>
     
         {% form 'product', product %}
@@ -146,7 +146,7 @@ Bugs/Limitations:
                 <option value="{{ variant.id }}"
                     {% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
                 >
-                    {{ variant.title }} - {{ variant.price | money }}
+                    {{ variant.title }} - {{ variant.price | money_with_currency }}
                 </option>
             {% endfor %}
         </select>
@@ -155,11 +155,20 @@ Bugs/Limitations:
             var selectCallback = function(variant, selector) {
                 if (variant) {
                     const currentImage = $("li.product-media-item.is-active > img");
-                    if(variant.featured_image.id != currentImage.attr("media-id")) {
+                    const currentImageId = currentImage.attr("media-id");
+                    if(variant.featured_image.id != currentImageId) {
+
                         const variantImageContainer = $("li.product-media-item > img[media-id="+variant.featured_image.id+"]").parent();
                         currentImage.parent().removeClass("is-active");
                         variantImageContainer.addClass("is-active");
+
+                        const variantCarouselButton = $("button.carousel-btn--variant > img[media-id="+variant.featured_image.id+"]").parent();
+                        const currentCarouselButton = $("button.carousel-selected-variant");
+                        currentCarouselButton.removeClass("is-active carousel-selected-variant");
+                        variantCarouselButton.addClass("is-active carousel-selected-variant ");
                     }
+                    const price = Shopify.formatMoney(variant.price, "")
+                    $("h2#price").text(price);
                     if(variant.available) {
                     }
                     else {
