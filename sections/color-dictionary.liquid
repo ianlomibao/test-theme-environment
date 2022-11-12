@@ -5,6 +5,14 @@ Each block will have a color field and text field. The text field will be the pl
 
 So when you loop your variants you take the color field value and apply it to the swatch. 
 {% endcomment %}
+{% style %}
+  {% for color_def in section.blocks %}
+    :root {
+        --{{ color_def.settings.title | handleize }}: {{ color_def.settings.color_value }};
+    }
+  {% endfor %}
+{% endstyle %}
+
 
 {% schema %}
 {
