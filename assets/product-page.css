@@ -124,7 +124,7 @@ form {
 }
 
 .selector-wrapper {
-    display: none;
+    /* display: none; */
 }
 
 select#product-select {
