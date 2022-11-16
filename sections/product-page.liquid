@@ -70,7 +70,12 @@ Bugs/Limitations:
                       loading="lazy"
                       width="576"
                       media-id="{{ featured_media.id }}"
-                      alt="{{ featured_media.alt | escape }}"
+                      alt="{{ featured_media.alt | escape | strip }}"
+                      {% comment %} {% if attached_to_variant %}
+                        option-name="{{ option_name }}"
+                        variant-name="{{ variant_name }}"
+                      {% endif %}
+                      alt="{{ image_alt }}" {% endcomment %}
                     >
                 </li>
             {%- endif -%}
@@ -101,27 +106,85 @@ Bugs/Limitations:
 
         <div id="img-horizontal-carousel">
           {%- if product.selected_or_first_available_variant.featured_media != null -%}
-            <button class="carousel-btn is-active carousel-selected-variant{% if variant_images contains featured_media.src %} carousel-btn--variant{% endif %}">
+            {% liquid
+              assign all_alt = featured_media.alt | strip | split: '#'
+              assign image_alt = all_alt[0] | escape | strip
+              if all_alt[1] != null
+                assign attached_to_variant = true
+                assign option_names = ""
+                assign variant_names = ""
+                for option in all_alt
+                  unless forloop.index == 1
+                    assign option_text = option | strip | split: '_'
+                    for word in option_text
+                      if forloop.index == 1
+                        assign option_name = word | strip | handleize
+                        assign option_names = option_names | append: ' ' | append: option_name | strip
+                      else
+                        assign variant_name = word | strip | handleize
+                        assign variant_names = variant_names | append: ' ' |  append: variant_name | strip
+                      endif
+                    endfor
+                  endunless
+                endfor
+              else
+                assign attached_to_variant = false
+              endif
+            %}
+            <button class="carousel-btn is-active carousel-selected-variant{% if variant_images contains featured_media.src or attached_to_variant %} carousel-btn--variant{% endif %}">
                 <img 
                   class="carousel-image" 
                   src="{{ featured_media | image_url: width: 70 }}"
                   loading="lazy"
                   width="70"
-                  alt="{{ featured_media.alt | escape }}"
+                  alt="{{ image_alt }}"
                   media-id="{{ featured_media.id }}"
+                  {% if attached_to_variant %}
+                    option-names="{{ option_names }}"
+                    variant-names="{{ variant_names }}"
+                  {% endif %}
                 >
             </button>
           {%- endif -%}
         {% for image in product.images %}
           {% unless image.id == featured_media.id %}
-            <button class="carousel-btn{% if variant_images contains image.src %} carousel-btn--variant{% else %} is-active{% endif %}">
+            {% liquid
+              assign all_alt = image.alt | strip | split: '#'
+              assign image_alt = all_alt[0] | escape | strip
+              if all_alt[1] != null
+                assign attached_to_variant = true
+                assign option_names = ""
+                assign variant_names = ""
+                for option in all_alt
+                  unless forloop.index == 1
+                    assign option_text = option | strip | split: '_'
+                    for word in option_text
+                      if forloop.index == 1
+                        assign option_name = word | strip | handleize
+                        assign option_names = option_names | append: ' ' | append: option_name | strip
+                      else
+                        assign variant_name = word | strip | handleize
+                        assign variant_names = variant_names | append: ' ' |  append: variant_name | strip
+                      endif
+                    endfor
+                  endunless
+                endfor
+              else
+                assign attached_to_variant = false
+              endif
+            %}
+            <button class="carousel-btn{% if variant_images contains image.src or attached_to_variant %} carousel-btn--variant{% else %} is-active{% endif %}">
                 <img 
                   class="carousel-image" 
                   src="{{ image | image_url: width: 70 }}"
                   loading="lazy"
                   width="70"
-                  alt="{{ image.alt | escape }}"
+                  alt="{{ image_alt }}"
                   media-id="{{ image.id }}"
+                  {% if attached_to_variant %}
+                    option-names="{{ option_names }}"
+                    variant-names="{{ variant_names }}"
+                  {% endif %}
                 >
             </button>
           {% endunless %}
@@ -161,10 +224,17 @@ Bugs/Limitations:
                         currentImage.parent().removeClass("is-active");
                         variantImageContainer.addClass("is-active");
 
+                        var variantCarouselButtons = $("button.carousel-btn--variant > img").filter(function(index) {
+                            return $(this).is("[variant-names~="+variant.options[0].toLowerCase().replace(' ', '-')+"]") | $(this).is("[variant-names~="+variant.options[1]+"]") | $(this).is("[variant-names~="+variant.options[2]+"]");
+                        }).parent();
+
                         const variantCarouselButton = $("button.carousel-btn--variant > img[media-id="+variant.featured_image.id+"]").parent();
-                        const currentCarouselButton = $("button.carousel-selected-variant");
-                        currentCarouselButton.removeClass("is-active carousel-selected-variant");
-                        variantCarouselButton.addClass("is-active carousel-selected-variant ");
+                        $.merge(variantCarouselButtons, variantCarouselButton);
+                        variantCarouselButtons = jQuery.uniqueSort(variantCarouselButtons);
+
+                        const currentCarouselButtons = $("button.carousel-selected-variant");
+                        currentCarouselButtons.removeClass("is-active carousel-selected-variant");
+                        variantCarouselButtons.addClass("is-active carousel-selected-variant");
                     }
                     const price = Shopify.formatMoney(variant.price, "")
                     $("h2#price").text(price);
@@ -188,7 +258,7 @@ Bugs/Limitations:
                 {% for option in product.options_with_values %}
                         {% if option.name == "Color" %}
                         <legend>
-                            <h3 class="product-title" id="product-title-color">Color: <span id="selected-color-name">{{ option.selected_value }}</span> </h3>
+                            <h3 class="product-title" id="product-title-color">{{ option.name }}: <span id="selected-color-name">{{ option.selected_value }}</span> </h3>
                         </legend>
                         <div id="swatch">
                             {% assign index = forloop.index0 %}
