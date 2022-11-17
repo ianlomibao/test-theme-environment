@@ -216,32 +216,29 @@ Bugs/Limitations:
         <script>
             var selectCallback = function(variant, selector) {
                 if (variant) {
-                    const currentImage = $("li.product-media-item.is-active > img");
-                    const currentImageId = currentImage.attr("media-id");
-                    if(variant.featured_image.id != currentImageId) {
+                    const currentImageContainer = $("li.product-media-item.is-active > img").paernt();
+                    currentImageContainer.removeClass("is-active");
+                    const variantImageContainer = $("li.product-media-item > img[media-id="+variant.featured_image.id+"]").parent();
+                    variantImageContainer.addClass("is-active");
 
-                        const variantImageContainer = $("li.product-media-item > img[media-id="+variant.featured_image.id+"]").parent();
-                        currentImage.parent().removeClass("is-active");
-                        variantImageContainer.addClass("is-active");
+                    const currentCarouselButtons = $("button.carousel-selected-variant");
+                    currentCarouselButtons.removeClass("is-active carousel-selected-variant");
 
-                        const option1 = variant.options[0].toLowerCase().replace(' ', '-');
-                        const option2 = variant.options[1] ? variant.options[1].toLowerCase().replace(' ', '-') : "null";
-                        const option3 = variant.options[2] ? variant.options[2].toLowerCase().replace(' ', '-') : "null";
+                    const option1 = variant.options[0].toLowerCase().replace(' ', '-');
+                    const option2 = variant.options[1] ? variant.options[1].toLowerCase().replace(' ', '-') : "null";
+                    const option3 = variant.options[2] ? variant.options[2].toLowerCase().replace(' ', '-') : "null";
 
-                        var variantCarouselButtons = $("button.carousel-btn--variant > img").filter(function(index) {
-                            return $(this).is("[variant-names~="+option1+"]") | $(this).is("[variant-names~="+option2+"]") | $(this).is("[variant-names~="+option3+"]");
-                        }).parent();            
-                        const variantCarouselButton = $("button.carousel-btn--variant > img[media-id="+variant.featured_image.id+"]").parent();
+                    var variantCarouselButtons = $("button.carousel-btn--variant > img").filter(function(index) {
+                        return $(this).is("[variant-names~="+option1+"]") | $(this).is("[variant-names~="+option2+"]") | $(this).is("[variant-names~="+option3+"]");
+                    }).parent();            
+                    const variantCarouselButton = $("button.carousel-btn--variant > img[media-id="+variant.featured_image.id+"]").parent();
 
-                        $.merge(variantCarouselButtons, variantCarouselButton);
-                        variantCarouselButtons = jQuery.uniqueSort(variantCarouselButtons);
+                    $.merge(variantCarouselButtons, variantCarouselButton);
+                    variantCarouselButtons = jQuery.uniqueSort(variantCarouselButtons);
 
-                        const currentCarouselButtons = $("button.carousel-selected-variant");
-                        currentCarouselButtons.removeClass("is-active carousel-selected-variant");
-                        variantCarouselButtons.addClass("is-active carousel-selected-variant");
+                    variantCarouselButtons.addClass("is-active carousel-selected-variant");
+                    $("#img-horizontal-carousel").prepend(variantCarouselButtons);
 
-                        $("#img-horizontal-carousel").prepend(variantCarouselButtons);
-                    }
                     const price = Shopify.formatMoney(variant.price, "")
                     $("h2#price").text(price);
                     if(variant.available) {
@@ -250,7 +247,6 @@ Bugs/Limitations:
                     }
                 }
                 else {
-
                 }
             }
             new Shopify.OptionSelectors('product-select', {
