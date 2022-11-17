@@ -22,7 +22,7 @@ Bugs/Limitations:
   {% assign colorOptions = product.options_with_values | where: "name", "Color" %}
   {% for value in colorOptions[0].values %}
     .color-btn-label[data-option-name="{{ value | handleize }}"] {
-        background-color: var(--{{ value | handleize }});
+      background-color: var(--{{ value | handleize }});
     }
   {% endfor %}
 {% endstyle %} 
@@ -53,7 +53,7 @@ Bugs/Limitations:
 
         <div id="main-image-wrapper">
             <ul>
-            {%- assign featured_media = product.selected_or_first_available_variant.featured_media -%}
+            {%- assign featured_media = product.selected_or_first_available_variant.featured_image -%}
             {%- if product.selected_or_first_available_variant.featured_media != null -%}
                 <li 
                   class="product-media-item is-active{% if variant_images contains featured_media.src %} product-media-item--variant{% endif %}"
@@ -224,17 +224,23 @@ Bugs/Limitations:
                         currentImage.parent().removeClass("is-active");
                         variantImageContainer.addClass("is-active");
 
-                        var variantCarouselButtons = $("button.carousel-btn--variant > img").filter(function(index) {
-                            return $(this).is("[variant-names~="+variant.options[0].toLowerCase().replace(' ', '-')+"]") | $(this).is("[variant-names~="+variant.options[1]+"]") | $(this).is("[variant-names~="+variant.options[2]+"]");
-                        }).parent();
+                        const option1 = variant.options[0].toLowerCase().replace(' ', '-');
+                        const option2 = variant.options[1] ? variant.options[1].toLowerCase().replace(' ', '-') : "null";
+                        const option3 = variant.options[2] ? variant.options[2].toLowerCase().replace(' ', '-') : "null";
 
+                        var variantCarouselButtons = $("button.carousel-btn--variant > img").filter(function(index) {
+                            return $(this).is("[variant-names~="+option1+"]") | $(this).is("[variant-names~="+option2+"]") | $(this).is("[variant-names~="+option3+"]");
+                        }).parent();            
                         const variantCarouselButton = $("button.carousel-btn--variant > img[media-id="+variant.featured_image.id+"]").parent();
+
                         $.merge(variantCarouselButtons, variantCarouselButton);
                         variantCarouselButtons = jQuery.uniqueSort(variantCarouselButtons);
 
                         const currentCarouselButtons = $("button.carousel-selected-variant");
                         currentCarouselButtons.removeClass("is-active carousel-selected-variant");
                         variantCarouselButtons.addClass("is-active carousel-selected-variant");
+
+                        $("#img-horizontal-carousel").prepend(variantCarouselButtons);
                     }
                     const price = Shopify.formatMoney(variant.price, "")
                     $("h2#price").text(price);
@@ -256,6 +262,7 @@ Bugs/Limitations:
 
             {% unless product.has_only_default_variant %}
                 {% for option in product.options_with_values %}
+                  {% capture option_number %}option{{forloop.index}}{% endcapture %}
                         {% if option.name == "Color" %}
                         <legend>
                             <h3 class="product-title" id="product-title-color">{{ option.name }}: <span id="selected-color-name">{{ option.selected_value }}</span> </h3>
@@ -276,8 +283,17 @@ Bugs/Limitations:
                                 <label 
                                     for="color-{{ forloop.index }}" 
                                     class="color-btn-label"
-                                    data-option-name="{{ value | handleize }}">
+                                    data-option-name="{{ value | handleize }}"
+                                    >
                                     <span>{{ value | escape }}</span>
+                                    {% assign this_variant = product.variants | where: option_number, value %}
+                                    
+                                    <img 
+                                    src="{{ this_variant[0].featured_image | image_url: width: 50 }}"
+                                    alt="Thumbnail image for {{ value | escape }}"
+                                    width="50"
+                                    loading="lazy"
+                                    >
                                 </label>
                             </div>    
                             {% endfor %}
