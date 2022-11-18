@@ -1,5 +1,6 @@
 $(document).ready(function() {
     console.log('product-page-jquery.js loaded in');
+    $("div.selector-wrapper>label:contains('Color')").parent().css("display", "none");
 
     const update_option_selection = function(optionInput) {
         const optionIndex = optionInput.attr("option-index");
@@ -22,6 +23,10 @@ $(document).ready(function() {
             const variantImageContainer = $("li.product-media-item > img[media-id="+imageId+"]").parent();
             currentImage.parent().removeClass("is-active");
             variantImageContainer.addClass("is-active");
+
+            const currentButton = $("button.on-display");
+            if(currentButton) currentButton.removeClass("on-display");
+            image.parent().addClass("on-display");
         }
     };
 
