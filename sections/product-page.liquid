@@ -54,56 +54,56 @@ Bugs/Limitations:
         {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
 
         <div id="main-image-wrapper">
-            <ul>
-            {%- assign featured_media = product.selected_or_first_available_variant.featured_image -%}
-            {%- if product.selected_or_first_available_variant.featured_media != null -%}
-                <li 
-                  class="product-media-item is-active{% if variant_images contains featured_media.src %} product-media-item--variant{% endif %}"
+          <ul>
+          {%- assign featured_media = product.selected_or_first_available_variant.featured_image -%}
+          {%- if product.selected_or_first_available_variant.featured_media != null -%}
+              <li 
+                class="product-media-item is-active{% if variant_images contains featured_media.src %} product-media-item--variant{% endif %}"
+              >
+                  <img
+                    class="product-image"
+                    srcset="
+                    {% if featured_media.width >= 288 %}{{ featured_media | image_url: width: 288 }} 288w,{% endif %}
+                    {% if featured_media.width >= 576 %}{{ featured_media | image_url: width: 576 }} 576w,{% endif %}
+                    {% if featured_media.width >= 550 %}{{ featured_media | image_url: width: 550 }} 550w,{% endif %}
+                    {% if featured_media.width >= 1100 %}{{ featured_media | image_url: width: 1100 }} 1100w,{% endif %}"
+                    src="{{ featured_media | image_url: width: 1100 }}"
+                    sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
+                    loading="lazy"
+                    width="576"
+                    media-id="{{ featured_media.id }}"
+                    alt="{{ featured_media.alt | escape | strip }}"
+                    {% comment %} {% if attached_to_variant %}
+                      option-name="{{ option_name }}"
+                      variant-name="{{ variant_name }}"
+                    {% endif %}
+                    alt="{{ image_alt }}" {% endcomment %}
+                  >
+              </li>
+          {%- endif -%}
+          {% for image in product.images %}
+            {% unless image.id == featured_media.id %}
+              <li
+                class="product-media-item{% if product.selected_or_first_available_variant.featured_media == null and forloop.index == 1 %} is-active{% endif %}{% if variant_images contains image.src %} product-media-item--variant{% endif %}"
+              >
+                <img
+                  class="product-image"
+                  srcset="
+                  {% if image.width >= 288 %}{{ image | image_url: width: 288 }} 288w,{% endif %}
+                  {% if image.width >= 576 %}{{ image | image_url: width: 576 }} 576w,{% endif %}
+                  {% if image.width >= 550 %}{{ image | image_url: width: 550 }} 550w,{% endif %}
+                  {% if image.width >= 1100 %}{{ image | image_url: width: 1100 }} 1100w,{% endif %}"
+                  src="{{ image | image_url: width: 1100 }}"
+                  sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
+                  loading="lazy"
+                  width="576"
+                  media-id="{{ image.id }}"
+                  alt="{{ image.alt | escape }}"
                 >
-                    <img
-                      class="product-image"
-                      srcset="
-                      {% if featured_media.width >= 288 %}{{ featured_media | image_url: width: 288 }} 288w,{% endif %}
-                      {% if featured_media.width >= 576 %}{{ featured_media | image_url: width: 576 }} 576w,{% endif %}
-                      {% if featured_media.width >= 550 %}{{ featured_media | image_url: width: 550 }} 550w,{% endif %}
-                      {% if featured_media.width >= 1100 %}{{ featured_media | image_url: width: 1100 }} 1100w,{% endif %}"
-                      src="{{ featured_media | image_url: width: 1100 }}"
-                      sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
-                      loading="lazy"
-                      width="576"
-                      media-id="{{ featured_media.id }}"
-                      alt="{{ featured_media.alt | escape | strip }}"
-                      {% comment %} {% if attached_to_variant %}
-                        option-name="{{ option_name }}"
-                        variant-name="{{ variant_name }}"
-                      {% endif %}
-                      alt="{{ image_alt }}" {% endcomment %}
-                    >
-                </li>
-            {%- endif -%}
-            {% for image in product.images %}
-              {% unless image.id == featured_media.id %}
-                <li
-                  class="product-media-item{% if product.selected_or_first_available_variant.featured_media == null and forloop.index == 1 %} is-active{% endif %}{% if variant_images contains image.src %} product-media-item--variant{% endif %}"
-                >
-                    <img
-                      class="product-image"
-                      srcset="
-                      {% if image.width >= 288 %}{{ image | image_url: width: 288 }} 288w,{% endif %}
-                      {% if image.width >= 576 %}{{ image | image_url: width: 576 }} 576w,{% endif %}
-                      {% if image.width >= 550 %}{{ image | image_url: width: 550 }} 550w,{% endif %}
-                      {% if image.width >= 1100 %}{{ image | image_url: width: 1100 }} 1100w,{% endif %}"
-                      src="{{ image | image_url: width: 1100 }}"
-                      sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
-                      loading="lazy"
-                      width="576"
-                      media-id="{{ image.id }}"
-                      alt="{{ image.alt | escape }}"
-                    >
-                </li>
-              {% endunless %}
-            {% endfor %}
-            </ul>
+              </li>
+            {% endunless %}
+          {% endfor %}
+          </ul>
         </div>
 
         <div id="img-horizontal-carousel">
@@ -284,6 +284,10 @@ Bugs/Limitations:
                   variantCarouselButtons.addClass("is-active carousel-selected-variant");
                   $("#img-horizontal-carousel").prepend(variantCarouselButtons);
 
+                  const currentButton = $("button.on-display");
+                  if(currentButton) currentButton.removeClass("on-display");
+                  variantCarouselButton.addClass("on-display");
+                  
                   const price = Shopify.formatMoney(variant.price, "")
                   $("h2#price").text(price);
                   if(variant.available) {
@@ -301,7 +305,6 @@ Bugs/Limitations:
           });
       </script>
 
-
         <h3 class="product-title" id="product-title-qty">Quantity</h3>
 
         <div id="grid-qty-atc">
@@ -317,7 +320,6 @@ Bugs/Limitations:
     {% endform %}
 
       <div id="specs">
-
         <ul id="tabs" role="tablist">
           <li><a href="#" role="tab">Overview</a></li>
         </ul>
@@ -325,7 +327,6 @@ Bugs/Limitations:
         <div id="description" role="tabpanel">
         {{ product.description }}
         </div>
-
       </div>
     </section>
 
