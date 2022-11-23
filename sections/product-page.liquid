@@ -233,12 +233,18 @@ Bugs/Limitations:
                     <span>{{ value | escape }}</span>
                     {% if section.settings.show_swatch_images %}
                     {% assign this_variant = product.variants | where: option_number, value %}
-                    <img 
+                    {% comment %} <img 
                     src="{{ this_variant[0].featured_image | image_url: width: 50 }}"
                     alt="Thumbnail image for {{ value | escape }}"
                     width="50"
                     loading="lazy"
-                    >
+                    > {% endcomment %}
+                    {% style %}
+                      .color-btn-label[data-option-name="{{ value | handleize}}"] {
+                        background-image: url({{ this_variant[0].featured_image | image_url: width: 75 }});
+                        background-position: center;
+                      }
+                    {% endstyle %}
                     {% endif %}
                   </label>
                 </div>    
@@ -270,22 +276,25 @@ Bugs/Limitations:
                   currentCarouselButtons.removeClass("is-active carousel-selected-variant");
 
                   const option1 = variant.options[0].toLowerCase().replace(' ', '-');
-                  const option2 = variant.options[1] ? variant.options[1].toLowerCase().replace(' ', '-') : "null";
-                  const option3 = variant.options[2] ? variant.options[2].toLowerCase().replace(' ', '-') : "null";
+                  const option2 = variant.options[1] ? variant.options[1].toLowerCase().replace(' ', '-') : false;
+                  const option3 = variant.options[2] ? variant.options[2].toLowerCase().replace(' ', '-') : false;
+                  console.log(option1, option2, option3)
 
                   var variantCarouselButtons = $("button.carousel-btn--variant > img").filter(function(index) {
-                      return $(this).is("[variant-names~="+option1+"]") | $(this).is("[variant-names~="+option2+"]") | $(this).is("[variant-names~="+option3+"]");
+                      const isOption1 = $(this).is("[variant-names~="+option1+"]");
+                      const isOption2 = option2 ? $(this).is("[variant-names~="+option2+"]") : true;
+                      const isOption3 = option3 ? $(this).is("[variant-names~="+option3+"]") : true;
+                      return isOption1 & isOption2 & isOption3;
                   }).parent();            
                   const variantCarouselButton = $("button.carousel-btn--variant > img[media-id="+variant.featured_image.id+"]").parent();
-                
-                  $.merge(variantCarouselButtons, variantCarouselButton);
-                  variantCarouselButtons = jQuery.uniqueSort(variantCarouselButtons);
+                  
+                  const newCarousel = $("button.carousel-btn--variant > img[media-id="+variant.featured_image.id+"]").parent(); 
+                  $.merge(newCarousel, variantCarouselButtons);
 
-                  variantCarouselButtons.addClass("is-active carousel-selected-variant");
-                  $("#img-horizontal-carousel").prepend(variantCarouselButtons);
+                  newCarousel.addClass("is-active carousel-selected-variant");
+                  $("#img-horizontal-carousel").prepend(newCarousel);
 
-                  const currentButton = $("button.on-display");
-                  if(currentButton) currentButton.removeClass("on-display");
+                  $("button.on-display").removeClass("on-display");
                   variantCarouselButton.addClass("on-display");
                   
                   const price = Shopify.formatMoney(variant.price, "")

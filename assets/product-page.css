@@ -115,7 +115,7 @@ button.on-display {
 img.carousel-image {
     height: 100%;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 #product-info {
@@ -190,12 +190,6 @@ select#product-select {
     position: absolute;
 }
 
-.color-btn-label>img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
 .selected ~ label {
     border-width: 3px;
     border-color: rgb(var(--dark-accent));
@@ -289,7 +283,12 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
 
     #img-container * {
-        max-height:50vh;
+        max-height: 50vh;
+    }
+
+    #main-image-wrapper {
+        min-width: 90%;
+        min-height: 80%;
     }
 
     li.product-media-item img {
@@ -308,5 +307,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     #swatch {
         overflow-x: scroll;
         flex-wrap: nowrap;
+    }
+
+    #atc {
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
     }
 }
