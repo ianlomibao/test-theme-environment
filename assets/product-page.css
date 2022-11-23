@@ -36,7 +36,8 @@ body {
 }
 
 #main-image-wrapper {
- 
+    min-width: 35vw;
+    min-height: 60vh;
     width: 80%;
     height: 100%;
     border: 1px solid #d8d8d8;
@@ -294,7 +295,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     li.product-media-item img {
         height: 100%;
         width: 100%;
-        object-fit: cover;
     }
 
     .product {
