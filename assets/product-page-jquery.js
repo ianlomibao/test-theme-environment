@@ -2,6 +2,8 @@ $(document).ready(function() {
     console.log('product-page-jquery.js loaded in');
     $("div.selector-wrapper>label:contains('Color')").parent().css("display", "none");
 
+    if ($("select.single-option-selector").length == 1) $("div.selector-wrapper").css("display", "none");
+
     const update_option_selection = function(optionInput) {
         const optionIndex = optionInput.attr("option-index");
         const optionSelector = $("select.single-option-selector")[optionIndex];

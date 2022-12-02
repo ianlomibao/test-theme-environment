@@ -17,7 +17,7 @@ Bugs/Limitations:
 
 {{ 'product-page.css' | asset_url | stylesheet_tag }}
 {{ 'option_selection.js' | shopify_asset_url | script_tag }}
-<script src="{{ 'product-page-jquery.js' | asset_url }}" type="module" defer="defer"></script>
+<script src="{{ 'product-page-jquery.js' | asset_url }}" type="module"></script>
 {% style %}
   {% if section.settings.show_swatch_colors %}
     {% assign colorOptions = product.options_with_values | where: "name", "Color" %}
@@ -28,6 +28,33 @@ Bugs/Limitations:
     {% endfor %}
   {% endif %}
 {% endstyle %} 
+
+<script id="reviewData" type="application/json">
+{
+  "reviews": [
+    {
+      "email": "johndoe@email.com",
+      "date": "2022-11-22",
+      "rating": 4,
+      "author": "John Doe",
+      "variant_purchased": "Red",
+      "title": "Test Review #1",
+      "review_text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu",
+      "images": []
+    },
+    {
+      "email": "test@email.com",
+      "date": "2022-10-23",
+      "rating": 5,
+      "author": "Sample Name",
+      "variant_purchased": "White",
+      "title": "Test Review #2",
+      "review_text": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu",
+      "images": []
+    }
+  ]
+}
+</script>
 
 {% comment %} <nav>
     <div class="nav-section" id="nav-logo">
@@ -328,6 +355,71 @@ Bugs/Limitations:
           
     {% endform %}
 
+    <form action="/cart/add" method="post">
+  {% if product.variants.size > 1 %}
+		{% if product.options[0] %}
+			{% assign used = '' %}
+			<label for="select-one">{{ product.options[0] }}</label>
+			<select id='select-one' onchange="letsDoThis()">
+				{% for variant in product.variants %}
+					{% unless used contains variant.option1 %}
+						<option value="{{ variant.option1 }}">{{ variant.option1 }}</option>
+						{% capture used %}{{ used }} {{ variant.option1 }}{% endcapture %}
+					{% endunless %}
+				{% endfor %}
+			</select>
+		{% endif %}
+		{% if product.options[1] %}
+			{% assign used = '' %}
+			<label for="select-one">{{ product.options[1] }}</label>
+			<select id='select-two' onchange="letsDoThis()">
+				{% for variant in product.variants %}
+					{% unless used contains variant.option2 %}
+						<option value="{{ variant.option2 }}">{{ variant.option2 }}</option>
+						{% capture used %}{{ used }} {{ variant.option2 }}{% endcapture %}
+					{% endunless %}
+				{% endfor %}
+			</select>
+		{% endif %}
+		{% if product.options[2] %}
+			{% assign used = '' %}
+			<label for="select-one">{{ product.options[2] }}</label>
+			<select id='select-three' onchange="letsDoThis()">
+				{% for variant in product.variants %}
+					{% unless used contains variant.option3 %}
+						<option value="{{ variant.option3 }}">{{ variant.option3 }}</option>
+						{% capture used %}{{ used }} {{ variant.option3 }}{% endcapture %}
+					{% endunless %}
+				{% endfor %}
+			</select>
+		{% endif %}
+	{% endif %}
+	<input type="hidden"name="id" id="product-select" value="{{ product.variants.first.id }}" />				
+</form>
+
+<script>
+	function letsDoThis() {
+		{% if product.options[0] %}var opt1 = document.getElementById('select-one').value;{% endif %}
+		{% if product.options[1] %}var opt2 = document.getElementById('select-two').value;{% endif %}
+		{% if product.options[2] %}var opt3 = document.getElementById('select-three').value;{% endif %}
+		var id = '';
+		{% for v in product.variants %}
+		if(opt1=="{{ v.option1 }}"{% if product.options[1] %} && opt2=="{{ v.option2 }}"{% endif %}{% if product.options[2] %} && opt3=="{{ v.option3 }}"{% endif %}) {
+				var id = {{ v.id }};
+				var price = "{{ v.price | money }}";
+			}
+		{% endfor %}
+		if(id!='') {
+			document.getElementById('product-select').value = id;
+			document.getElementById('price').innerHTML = price;
+		} else {
+			document.getElementById('product-select').value = '';
+			document.getElementById('price').innerHTML = 'Unavailable';
+		}
+		
+	}
+</script>
+
       <div id="specs">
         <ul id="tabs" role="tablist">
           <li><a href="#" role="tab">Overview</a></li>
@@ -337,8 +429,13 @@ Bugs/Limitations:
         {{ product.description }}
         </div>
       </div>
+
     </section>
 
+    {% comment %} <article id="review-container">
+      <h1>User Reviews</h1>
+
+    </article> {% endcomment %}
 </main>
 
 {% schema %}
