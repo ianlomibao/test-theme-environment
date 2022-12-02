@@ -139,7 +139,7 @@ form {
     margin-top: 1.5rem;
 }
 
-select#product-select {
+#product-select {
     display: none;
 }
 
